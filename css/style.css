@@ -1,6 +1,7 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: Arial, Helvetica, sans-serif
 }
 
 nav {
@@ -19,7 +20,7 @@ nav {
 .logo img {
     width: 40px;
     height: auto;
-    border-radius: 200px;
+    border-radius: 50%;
 }
 
 form {
@@ -48,6 +49,7 @@ form input[type="text"] {
     width: 100%;
     outline: none;
 }
+
 .sign-in {
     display: flex;
     gap: 10px;
@@ -63,62 +65,131 @@ form input[type="text"] {
     font-size: 16px;
 }
 
-.sign-in button a {
-    color: white;
-    text-decoration: none;
-}
-
 .sign-in button:hover {
     background-color: #0056b3;
 }
+
 .container {
     display: flex;
+    height: 89vh;
 }
+
 .left-side {
-    padding-top: 20px;
+    padding-top: 40px;
     background: #545454;
-    width: 15%;
-    padding: 30px;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
+
 .header {
     display: flex;
-    gap: 10px;
+    justify-content: center;
 }
-.header, .home, .note {
-    /* display: flex; */
+
+#home, #note {
+    padding: 6px 30px;
+    color: white;
+    background: rgb(118, 2, 2);
+    border: none;
+}
+
+.home, .note {
+    display: flex;
     align-items: center;
-    gap: 6px;
-    background: #745656;
 }
 
+.fa-house, .fa-note-sticky {
+    color: white;
+    position: relative;
+    left: 24px;
+    font-size: 14px;
+}
 
+.folder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+#folder {
+    padding: 6px 82px;
+    border: none;
+    display: flex;
+}
 
+span {
+    position: relative;
+    right: 50px;
+}
 
+.fa-folder {
+    position: relative;
+    left: 26px;
+    color: orange;
+}
 
+.draft-cate {
+    padding-top: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
+.draft {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+#draft {
+    padding: 6px 82px;
+    border: none;
+}
 
+.fa-file-pen {
+    color: orange;
+    position: relative;
+    left: 26px;
+}
 
+.categories {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.fa-list {
+    color: rgb(7, 5, 0);
+    position: relative;
+    left: 26px;
+}
 
+#cate {
+    padding: 6px 68px;
+    border: none;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+p {
+    position: relative;
+    right: 36px;
+}
 
 .right-side {
-    background: #DEDEDE;
-    width: 85%;
+    width: 70%;
+}
+h1 {
+    padding: 30px 0px 0px 80px;
+}
+.img {
+    padding: 50px 0px 0px 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+img {
+    width: 600px;
+
 }

@@ -6,6 +6,7 @@
     <title>Note Taker Application</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/main.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -24,43 +25,40 @@
             </div>
         </div>
     </nav>
-    <div class="container">
 
+    <div class="container">
         <div class="left-side">
-            
             <div class="header">
                 <div class="home">
-                    <i class="material-icons" id="homeicon">home</i>
+                    <i class="fa-solid fa-house"></i>
                     <button id="home">Home</button>
                 </div>
                 <div class="note">
-                    <i class="material-icons" id="noteicon">note</i>
-                    <button id="note">All Notes</button>
+                    <i class="fa-regular fa-note-sticky"></i>
+                    <button id="note">Notes</button>
                 </div>
             </div>
-            <!-- <div class="folder">
-                <i class="material-icons" id="foldericon">folder</i>
-                <button>Folder</button>
+            <div class="folder">
+                <i class="fa-solid fa-folder"></i>
+                <button id="folder"><span>Folder</span></button>
             </div>
             <div class="draft-cate">
                 <div class="draft">
-                    <i class="material-icons" id="drafticon">drafts</i>
-                    <button>Drafts</button>
-                </div>
+                    <i class="fa-solid fa-file-pen"></i>
+                    <button id="draft"><span>Drafts</span></button>
+                </div> 
                 <div class="categories">
-                    <i class="material-icons" id="categoryicon">category</i>
-                    <button>Categories</button>
+                    <i class="fa-solid fa-list"></i>
+                    <button id="cate"><p>Categories</p></button>
                 </div>
             </div>
-        </div> -->
-
-
-
-
-
-
+        </div>
 
         <div class="right-side">
+            <h1>Welcome to Note Taker</h1>
+            <div class="img">
+                <img src="images/noteImage.jpeg" alt="NoteImage">
+            </div>
         </div>
     </div>
 </body>
