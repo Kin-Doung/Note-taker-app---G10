@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #004FCD;
+}
+
+.navbar {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+}
+
+.logo img {
+    width: 40px;
+    height: auto;
+    border-radius: 200px;
+}
+
+form {
+    flex-grow: 0;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    gap: 10px;
+}
+
+form .material-icons {
+    font-size: 20px;
+    color: #736767;
+    cursor: pointer;
+    position: relative;
+    left: 44px;
+}
+
+form input[type="text"] {
+    padding: 6px 36px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+}
+.sign-in {
+    display: flex;
+    gap: 10px;
+}
+
+.sign-in button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.sign-in button a {
+    color: white;
+    text-decoration: none;
+}
+
+.sign-in button:hover {
+    background-color: #0056b3;
+}
+.container {
+    display: flex;
+}
+.left-side {
+    padding-top: 20px;
+    background: #545454;
+    width: 15%;
+    padding: 30px;
+}
+.header {
+    display: flex;
+    gap: 10px;
+}
+.header, .home, .note {
+    /* display: flex; */
+    align-items: center;
+    gap: 6px;
+    background: #745656;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.right-side {
+    background: #DEDEDE;
+    width: 85%;
+}
