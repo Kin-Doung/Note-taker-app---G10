@@ -3,9 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Note Taker Application</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js" defer></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    
+    <nav>
+        <div class="navbar">
+            <div class="logo">
+                <img src="/images/noteLogo.jpg" alt="Logo of the website">
+            </div>
+            <form>
+                <i class="material-icons">search</i>
+                <input type="text" name="text" id="search" placeholder="Search">
+            </form>
+            <div class="sign-in">
+                <a href=""><button type="button">Sign In</button></a>
+                <a href=""><button type="button">Sign Out</button></a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+
+        <div class="left-side">
+            
+            <div class="header">
+                <div class="home">
+                    <i class="material-icons" id="homeicon">home</i>
+                    <button id="home">Home</button>
+                </div>
+                <div class="note">
+                    <i class="material-icons" id="noteicon">note</i>
+                    <button id="note">All Notes</button>
+                </div>
+            </div>
+            <!-- <div class="folder">
+                <i class="material-icons" id="foldericon">folder</i>
+                <button>Folder</button>
+            </div>
+            <div class="draft-cate">
+                <div class="draft">
+                    <i class="material-icons" id="drafticon">drafts</i>
+                    <button>Drafts</button>
+                </div>
+                <div class="categories">
+                    <i class="material-icons" id="categoryicon">category</i>
+                    <button>Categories</button>
+                </div>
+            </div>
+        </div> -->
+
+
+
+
+
+
+
+        <div class="right-side">
+        </div>
+    </div>
 </body>
 </html>
