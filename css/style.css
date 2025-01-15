@@ -73,7 +73,13 @@ form input[type="text"] {
     display: flex;
     height: 89vh;
 }
-
+.leftside {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    position: relative;
+    right: 10px;
+}
 .left-side {
     padding-top: 40px;
     background: #545454;
@@ -87,103 +93,87 @@ form input[type="text"] {
     display: flex;
     justify-content: center;
 }
-
 #home, #note {
     padding: 6px 30px;
     color: white;
     background: rgb(118, 2, 2);
     border: none;
 }
-
 .home, .note {
     display: flex;
     align-items: center;
 }
-
 .fa-house, .fa-note-sticky {
     color: white;
     position: relative;
     left: 24px;
     font-size: 14px;
 }
-
 .folder {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 #folder {
     padding: 6px 82px;
     border: none;
     display: flex;
 }
-
 span {
     position: relative;
     right: 50px;
 }
-
 .fa-folder {
     position: relative;
     left: 26px;
     color: orange;
 }
-
 .draft-cate {
     padding-top: 200px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-
 .draft {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 #draft {
     padding: 6px 82px;
     border: none;
 }
-
 .fa-file-pen {
     color: orange;
     position: relative;
     left: 26px;
 }
-
 .categories {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 .fa-list {
     color: rgb(7, 5, 0);
     position: relative;
     left: 26px;
 }
-
 #cate {
     padding: 6px 68px;
     border: none;
 }
-
 p {
     position: relative;
     right: 36px;
 }
-
 .right-side {
-    width: 70%;
+    width: 80%;
 }
 h1 {
     padding: 30px 0px 0px 80px;
 }
 .img {
-    padding: 50px 0px 0px 100px;
+    padding: 50px 60px 0px 80px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -191,5 +181,75 @@ h1 {
 }
 img {
     width: 600px;
-
+}
+.create-new {
+    background: #745656;
+    padding: 10px;
+    display: none;
+}
+.all {
+    justify-content: space-between;
+    width: 80%;
+    margin: auto;
+    display: flex;
+}
+.create-new-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+#new-note {
+    border-radius: 30px;
+    padding: 8px 30px;
+    background: white;
+    border: none;
+    text-align: start;
+}
+#newnote {
+    position: relative;
+    right: 12px;
+    font-weight: bold;
+}
+.fa-circle-plus {
+    position: relative;
+    right: 38px;
+}
+.file-edit-view {
+    background: white;
+    display: flex;
+    align-items: center;
+    width: 80%;
+    justify-content: space-around;
+    border-radius: 30px;
+}
+#file, #edit, #view {
+    cursor: pointer;
+    font-weight: bold;
+}
+.fev {
+    display: flex;
+    gap: 40px;
+}
+.delete {
+    display: flex;
+    align-items: center;
+    position: relative;
+    left: 40px;
+}
+#dl-del {
+    padding: 4px 30px;
+    border: none;
+    background: red;
+    color: white;
+    border-radius: 30px;
+}
+#del {
+    position: relative;
+    left: 8px;
+}
+.fa-trash {
+    position: relative;
+    left: 28px;
+    color: white;
+    font-size: 14px;
 }
