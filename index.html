@@ -21,41 +21,66 @@
             </form>
             <div class="sign-in">
                 <a href=""><button type="button">Sign In</button></a>
-                <a href=""><button type="button">Sign Out</button></a>
+                <a href=""><button type="button">Sign Up</button></a>
             </div>
         </div>
     </nav>
 
     <div class="container">
         <div class="left-side">
-            <div class="header">
-                <div class="home">
-                    <i class="fa-solid fa-house"></i>
-                    <button id="home">Home</button>
+            <div class="leftside">
+                <div class="header">
+                    <div class="home">
+                        <i class="fa-solid fa-house"></i>
+                        <button id="home">Home</button>
+                    </div>
+                    <div class="note">
+                        <i class="fa-regular fa-note-sticky"></i>
+                        <button id="note">Notes</button>
+                    </div>
                 </div>
-                <div class="note">
-                    <i class="fa-regular fa-note-sticky"></i>
-                    <button id="note">Notes</button>
+                <div class="folder">
+                    <i class="fa-solid fa-folder"></i>
+                    <button id="folder"><span>Folder</span></button>
                 </div>
-            </div>
-            <div class="folder">
-                <i class="fa-solid fa-folder"></i>
-                <button id="folder"><span>Folder</span></button>
-            </div>
-            <div class="draft-cate">
-                <div class="draft">
-                    <i class="fa-solid fa-file-pen"></i>
-                    <button id="draft"><span>Drafts</span></button>
-                </div> 
-                <div class="categories">
-                    <i class="fa-solid fa-list"></i>
-                    <button id="cate"><p>Categories</p></button>
+                <div class="draft-cate">
+                    <div class="draft">
+                        <i class="fa-solid fa-file-pen"></i>
+                        <button id="draft"><span>Drafts</span></button>
+                    </div> 
+                    <div class="categories">
+                        <i class="fa-solid fa-list"></i>
+                        <button id="cate"><p>Categories</p></button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="right-side">
             <h1>Welcome to Note Taker</h1>
+            <div class="create-new">
+                <div class="all">
+                    <div class="create-new-note">
+                        <button id="new-note">
+                            <span id="newnote">New Note</span>
+                        </button>
+                        <i class="fa-solid fa-circle-plus"></i>
+                    </div>
+                    <div class="file-edit-view">
+                        <div class="fev">
+                            <span id="file">File</span>
+                            <span id="edit">Edit</span>
+                            <span id="view">View</span>
+                        </div>
+                        <div class="delete">
+                            <i class="fa-solid fa-trash"></i>
+                            <button id="dl-del">
+                                <span id="del">Delete</span>    
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="img">
                 <img src="images/noteImage.jpeg" alt="NoteImage">
             </div>
