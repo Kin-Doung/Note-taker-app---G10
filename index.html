@@ -1,90 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Note Taker Application</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css" />
     <script src="js/main.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body>
-    <nav>
-        <div class="navbar">
-            <div class="logo">
-                <img src="/images/noteLogo.jpg" alt="Logo of the website">
-            </div>
-            <form>
-                <i class="material-icons">search</i>
-                <input type="text" name="text" id="search" placeholder="Search">
-            </form>
-            <div class="sign-in">
-                <a href=""><button type="button">Sign In</button></a>
-                <a href=""><button type="button">Sign Up</button></a>
-            </div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script type="module">
+      // Import necessary Firebase functions
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+      } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCzrj6bCN4WSslr7XzOrbtQsmnnB-GTrS4",
+        authDomain: "note-taker-8039e.firebaseapp.com",
+        databaseURL: "https://note-taker-8039e-default-rtdb.firebaseio.com",
+        projectId: "note-taker-8039e",
+        storageBucket: "note-taker-8039e.firebasestorage.app",
+        messagingSenderId: "810265620163",
+        appId: "1:810265620163:web:adcadcf960dd4f2cc57c76",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      // Function to handle form visibility and saving data to Firebase
+      function dbFunctions() {
+        const button = document.querySelector("#button");
+        const formContainer = document.querySelector(".form-container");
+        const btn = document.querySelector(".submit-btn");
+
+        // Show form when the button is clicked
+        button.addEventListener("click", (e) => {
+          formContainer.style.display = "block";
+        });
+
+        // Hide form when the submit button is clicked and save data to Firebase
+        btn.addEventListener("click", (e) => {
+          e.preventDefault(); // Prevent form submission
+
+          const firstName = document.getElementById("first_name").value;
+          const lastName = document.getElementById("last_name").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          // Save the user data to Firebase
+          saveUserData(firstName, lastName, email, password);
+
+          // Hide the form after submitting
+          formContainer.style.display = "none";
+        });
+      }
+
+      // Function to save user data to Firebase Realtime Database
+      function saveUserData(firstName, lastName, email, password) {
+        // Create a reference to 'users' in the database
+        const userRef = ref(db, "users/" + email.replace(".", "_")); // Using email as a unique key
+
+        // Save user data in Firebase
+        set(userRef, {
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          password: password,
+        })
+          .then(() => {
+            console.log("User data saved successfully!");
+          })
+          .catch((error) => {
+            console.error("Error saving data:", error);
+          });
+      }
+
+      // Initialize the functions
+      dbFunctions();
+    </script>
+  </head>
+  <body>
+    <div class="login-container" style="display: none">
+      <h1 id="log-Up">Login</h1>
+      <form id="loginForm">
+        <i class="fa-solid fa-user"></i>
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="Username (Email)"
+          required
+        />
+        <i class="fa-solid fa-lock"></i>
+        <input
+          type="password"
+          name="password"
+          id="passwords"
+          placeholder="Password"
+          required
+        />
+        <div id="checkbox">
+          <input type="checkbox" name="remember" id="remember" />
+          <label for="remember">Remember me</label>
         </div>
+        <a href="/forgot-password" id="forgotPassword">Forgot Password?</a>
+        <button type="submit" id="submit">Login</button>
+        <a href="/register" id="register">Register</a>
+      </form>
+    </div>
+    <div class="form-container" style="display: none">
+      <h1 id="login">Login</h1>
+      <form id="form_signup">
+        <label>First Name</label>
+        <i class="fa-solid fa-user formSing"></i>
+        <input
+          type="text"
+          name="first_name"
+          id="first_name"
+          placeholder="First Name"
+          required
+        />
+        <label>Last Name</label>
+        <i class="fa-solid fa-user formSing"></i>
+        <input
+          type="text"
+          name="last_name"
+          id="last_name"
+          placeholder="Last Name"
+          required
+        />
+        <label>Email</label>
+        <i class="fa-solid fa-envelope formSing"></i>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email"
+          required
+        />
+        <label>Password</label>
+        <i class="fa-solid fa-lock "></i>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+    </div>
+
+    <nav>
+      <div class="navbar">
+        <div class="logo">
+          <img src="/images/noteLogo.jpg" alt="Logo of the website" />
+        </div>
+        <form>
+          <i class="material-icons">search</i>
+          <input type="text" name="text" id="search" placeholder="Search" />
+        </form>
+        <div class="sign-in">
+          <button type="button" id="button">Sign In</button>
+          <button type="button" id="sing-up">Sign Out</button>
+        </div>
+      </div>
     </nav>
 
     <div class="container">
-        <div class="left-side">
-            <div class="leftside">
-                <div class="header">
-                    <div class="home">
-                        <i class="fa-solid fa-house"></i>
-                        <button id="home">Home</button>
-                    </div>
-                    <div class="note">
-                        <i class="fa-regular fa-note-sticky"></i>
-                        <button id="note">Notes</button>
-                    </div>
-                </div>
-                <div class="folder">
-                    <i class="fa-solid fa-folder"></i>
-                    <button id="folder"><span>Folder</span></button>
-                </div>
-                <div class="draft-cate">
-                    <div class="draft">
-                        <i class="fa-solid fa-file-pen"></i>
-                        <button id="draft"><span>Drafts</span></button>
-                    </div> 
-                    <div class="categories">
-                        <i class="fa-solid fa-list"></i>
-                        <button id="cate"><p>Categories</p></button>
-                    </div>
-                </div>
-            </div>
+      <div class="left-side">
+        <div class="header">
+          <div class="home">
+            <i class="fa-solid fa-house"></i>
+            <button id="home">Home</button>
+          </div>
+          <div class="note">
+            <i class="fa-regular fa-note-sticky"></i>
+            <button id="note">Notes</button>
+          </div>
         </div>
+        <div class="folder">
+          <i class="fa-solid fa-folder"></i>
+          <button id="folder"><span>Folder</span></button>
+        </div>
+        <div class="draft-cate">
+          <div class="draft">
+            <i class="fa-solid fa-file-pen"></i>
+            <button id="draft"><span>Drafts</span></button>
+          </div>
+          <div class="categories">
+            <i class="fa-solid fa-list"></i>
+            <button id="cate"><p>Categories</p></button>
+          </div>
+        </div>
+      </div>
 
-        <div class="right-side">
-            <h1>Welcome to Note Taker</h1>
-            <div class="create-new">
-                <div class="all">
-                    <div class="create-new-note">
-                        <button id="new-note">
-                            <span id="newnote">New Note</span>
-                        </button>
-                        <i class="fa-solid fa-circle-plus"></i>
-                    </div>
-                    <div class="file-edit-view">
-                        <div class="fev">
-                            <span id="file">File</span>
-                            <span id="edit">Edit</span>
-                            <span id="view">View</span>
-                        </div>
-                        <div class="delete">
-                            <i class="fa-solid fa-trash"></i>
-                            <button id="dl-del">
-                                <span id="del">Delete</span>    
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="img">
-                <img src="images/noteImage.jpeg" alt="NoteImage">
-            </div>
+      <div class="right-side">
+        <h1>Welcome to Note Taker</h1>
+        <div class="img">
+          <img src="images/noteImage.jpeg" alt="NoteImage"/>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

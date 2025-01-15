@@ -1,9 +1,11 @@
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif
+    font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Navigation Bar */
 nav {
     background-color: #004FCD;
 }
@@ -38,7 +40,7 @@ form .material-icons {
     color: #736767;
     cursor: pointer;
     position: relative;
-    left: 44px;
+    left: 40px;
 }
 
 form input[type="text"] {
@@ -56,19 +58,21 @@ form input[type="text"] {
 }
 
 .sign-in button {
-    background-color: #000000;
+    background-color: #000;
     color: white;
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 .sign-in button:hover {
     background-color: #0056b3;
 }
 
+/* Layout Container */
 .container {
     display: flex;
     height: 89vh;
@@ -93,163 +97,254 @@ form input[type="text"] {
     display: flex;
     justify-content: center;
 }
-#home, #note {
+
+#home, #note, #folder, #draft, #cate {
     padding: 6px 30px;
-    color: white;
-    background: rgb(118, 2, 2);
     border: none;
-}
-.home, .note {
-    display: flex;
-    align-items: center;
-}
-.fa-house, .fa-note-sticky {
     color: white;
-    position: relative;
-    left: 24px;
-    font-size: 14px;
 }
-.folder {
+
+#home, #note {
+    background: rgb(118, 2, 2);
+}
+
+.folder, .draft, .categories {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-#folder {
-    padding: 6px 82px;
-    border: none;
-    display: flex;
+
+.fa-house, .fa-note-sticky, .fa-folder, .fa-file-pen, .fa-list {
+    font-size: 14px;
+    color: white;
+    position: relative;
+    left: 24px;
+}
+#login{
+    color: #fff;
+    margin-left: -60px;
+}
+.fa-list{
+    color: gray;
+}
+.fa-folder {
+    color: orange;
+}
+#folder{
+    margin-left: 5px;
+    width: 208px;
+    color: gray;
+}
+#draft{
+    margin-left: 5px;
+    width: 208px;
+    color: gray;
+}
+#cate{
+    margin-left: 5px;
+    width: 208px;
+    color: gray;
+}
+.fa-file-pen {
+    color: orange;
 }
 span {
     position: relative;
     right: 50px;
 }
-.fa-folder {
-    position: relative;
-    left: 26px;
-    color: orange;
+
+/* Right Side */
+.right-side {
+    width: 70%;
 }
+
+h1 {
+    padding: 30px 0 0 80px;
+}
+
+.img {
+    padding: 50px 0 0 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+img {
+    width: 600px;
+}
+
+/* Form Container */
+.form-container {
+    position: fixed;
+    top: 100px;
+    left: 300px;
+    z-index: 10;
+    background-color: #34495e ;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    height: 70vh;
+    display: none;
+    color: #fff;
+}
+
+/* Form Elements */
+.form-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-container .fa-solid {
+    position: relative;
+    left: 285px;
+    top: 40px;
+    color: gray;
+}
+
+.fa-envelope {
+    margin-left: 35px;
+}
+
+.fa-lock {
+    margin-left: 6px;
+}
+
+/* Submit Button */
+button.submit-btn {
+    margin-top: 20px;
+    width: 106%;
+    padding: 12px;
+    background-color: blue;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.submit-btn:hover {
+    background-color: rgb(54, 54, 134);
+}
+
+/* Drafts and Categories */
 .draft-cate {
     padding-top: 200px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-.draft {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#draft {
-    padding: 6px 82px;
-    border: none;
-}
-.fa-file-pen {
-    color: orange;
-    position: relative;
-    left: 26px;
-}
-.categories {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.fa-list {
-    color: rgb(7, 5, 0);
-    position: relative;
-    left: 26px;
-}
-#cate {
-    padding: 6px 68px;
-    border: none;
-}
 p {
     position: relative;
     right: 36px;
 }
-.right-side {
-    width: 80%;
+#form_signup{
+    display: block;
 }
-h1 {
-    padding: 30px 0px 0px 80px;
-}
-.img {
-    padding: 50px 60px 0px 80px;
+
+
+
+/* Login Container */
+.login-container {
+    position:absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-}
-img {
-    width: 600px;
-}
-.create-new {
-    background: #745656;
-    padding: 10px;
+    color: #fff;
+    top: 90px;
+    left: 300px;
+    height: 70vh;
+    width: 50%;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    margin: 0;
+    background: rgb(150, 145, 145);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
     display: none;
 }
-.all {
-    justify-content: space-between;
-    width: 80%;
-    margin: auto;
-    display: flex;
+#loginForm{
+    display: block;
 }
-.create-new-note {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+
+.login-container h1 {
+    margin-bottom: 20px;
 }
-#new-note {
-    border-radius: 30px;
-    padding: 8px 30px;
-    background: white;
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 85%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.login-container input[type="checkbox"] {
+    margin-top: 10px;
+}
+
+#checkbox {
+    margin-right: 290px;
+}
+
+#forgotPassword {
+    position: relative;
+    top: -15px;
+    margin-left: 270px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-container button {
+    background: #007bff;
+    color: white;
+    padding: 10px;
     border: none;
-    text-align: start;
-}
-#newnote {
-    position: relative;
-    right: 12px;
-    font-weight: bold;
-}
-.fa-circle-plus {
-    position: relative;
-    right: 38px;
-}
-.file-edit-view {
-    background: white;
-    display: flex;
-    align-items: center;
-    width: 80%;
-    justify-content: space-around;
-    border-radius: 30px;
-}
-#file, #edit, #view {
+    border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
+    width: 90%;
+    margin: 10px 0;
 }
-.fev {
-    display: flex;
-    gap: 40px;
+#log-Up{
+    margin-left: -100px;
 }
-.delete {
-    display: flex;
-    align-items: center;
+#signUp {
+    margin: 20px;
+}
+
+/* Icons */
+.fa-user {
     position: relative;
-    left: 40px;
+    left: 415px;
+    color: gray;
 }
-#dl-del {
-    padding: 4px 30px;
-    border: none;
-    background: red;
-    color: white;
-    border-radius: 30px;
-}
-#del {
+
+.fa-lock {
     position: relative;
-    left: 8px;
+    top: 60px;
+    left: -25px;
+    color: gray;
 }
-.fa-trash {
-    position: relative;
-    left: 28px;
-    color: white;
-    font-size: 14px;
-}
+
+
+
+
+    
