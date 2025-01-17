@@ -76,14 +76,9 @@ form input[type="text"] {
 .container {
     display: flex;
     height: 89vh;
+    background: #a0a0a0;
 }
-.leftside {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-    position: relative;
-    right: 10px;
-}
+
 .left-side {
     padding-top: 40px;
     background: #545454;
@@ -148,6 +143,7 @@ form input[type="text"] {
 .fa-file-pen {
     color: orange;
 }
+
 span {
     position: relative;
     right: 50px;
@@ -155,7 +151,9 @@ span {
 
 /* Right Side */
 .right-side {
-    width: 70%;
+    width: 80%;
+    overflow-y: auto;
+    background: #fff;
 }
 
 h1 {
@@ -173,8 +171,6 @@ h1 {
 img {
     width: 600px;
 }
-
-/* Form Container */
 .form-container {
     position: fixed;
     top: 100px;
@@ -249,6 +245,7 @@ button.submit-btn:hover {
     flex-direction: column;
     gap: 20px;
 }
+
 p {
     position: relative;
     right: 36px;
@@ -256,7 +253,6 @@ p {
 #form_signup{
     display: block;
 }
-
 
 
 /* Login Container */
@@ -343,8 +339,159 @@ p {
     left: -25px;
     color: gray;
 }
+.create-new {
+    background: #745656;
+    padding: 10px;
+    display: none;
+    padding-top: 20px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 1004px;
+}
+.all {
+    justify-content: space-between;
+    width: 80%;
+    margin: auto;
+    display: flex;
+}
+.create-new-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+#new-note {
+    border-radius: 30px;
+    padding: 8px 30px;
+    background: white;
+    border: none;
+    text-align: start;
+}
+#newnote {
+    position: relative;
+    right: 12px;
+    font-weight: bold;
+}
+.fa-circle-plus {
+    position: relative;
+    right: 38px;
+}
+.file-edit-view {
+    background: white;
+    display: flex;
+    align-items: center;
+    width: 80%;
+    justify-content: space-around;
+    border-radius: 30px;
+}
+#file, #edit, #view {
+    cursor: pointer;
+    font-weight: bold;
+}
+.fev {
+    display: flex;
+    gap: 40px;
+}
+.delete {
+    display: flex;
+    align-items: center;
+    position: relative;
+    left: 40px;
+}
+#dl-del {
+    padding: 4px 30px;
+    border: none;
+    background: red;
+    color: white;
+    border-radius: 30px;
+}
+#del {
+    position: relative;
+    left: 8px;
+}
+.fa-trash {
+    position: relative;
+    left: 28px;
+    color: white;
+    font-size: 14px;
+}
 
+.part-new-note {
+    margin: auto;
+    position: relative;
+    top: 20px;
+    left: 66px;
+    display: flex;
+    flex-direction: column;  
+    gap: 20px;  
+    overflow-y: auto;
+}
+.folder-row {
+    width: 85%;
+    display: flex;
+    align-items: center;
+    background-color: #adb0a7;
+    padding: 10px 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;    
+} 
 
-
-
-    
+.checkbox-number {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    position: relative;
+    left: 20px;
+}
+.folder-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.folder-number {
+    font-size: 14px;
+    font-weight: bold;
+    position: relative;
+    left: 10px;
+}
+.folder-title {
+    flex: 1;
+    font-size: 14px;
+    text-align: left;
+    margin-left: 10px;
+    color: #333;
+    position: relative;
+    left: 70px;
+}
+.date-time {
+    position: relative;
+    right: 150px;
+    display: flex;
+}
+.folder-date {
+    font-size: 12px;
+    color: #666;
+}
+.folder-time {
+    font-size: 12px;
+    color: #666;
+    position: relative;
+    left: 4px;
+}
+.folder-open-btn {
+    background-color: #00ff00;
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    right: 20px;
+}
+.folder-open-btn:hover {
+    background-color: #00cc00;
+}
