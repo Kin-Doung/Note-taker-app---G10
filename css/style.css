@@ -77,8 +77,13 @@ form input[type="text"] {
     display: flex;
     height: 89vh;
 }
-
-/* Left Side */
+.leftside {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    position: relative;
+    right: 10px;
+}
 .left-side {
     padding-top: 40px;
     background: #545454;
@@ -143,7 +148,6 @@ form input[type="text"] {
 .fa-file-pen {
     color: orange;
 }
-
 span {
     position: relative;
     right: 50px;
@@ -245,7 +249,6 @@ button.submit-btn:hover {
     flex-direction: column;
     gap: 20px;
 }
-
 p {
     position: relative;
     right: 36px;
@@ -344,3 +347,4 @@ p {
 
 
 
+    
