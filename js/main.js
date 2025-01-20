@@ -1,337 +1,263 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loginContainer = document.querySelector(".login-container");
-  const signUp = document.querySelector("#sing-up");
-  const submit = document.querySelector("#submit");
-  const usernameInput = document.querySelector("#username");
-  const passwordInput = document.querySelector("#passwords");
-  const rememberCheckbox = document.querySelector("#remember");
+let db;
+let folders = { Home: [] };  
+let currentFolder = "Home"; 
 
-  // Show the login container when the "Sign up" button is clicked
-  signUp.addEventListener("click", () => {
-    loginContainer.style.display = "block";
-  });
+function initializeDB() {
+  const request = indexedDB.open("NotesApp", 1);
 
-  // Handle form submission
-  submit.addEventListener("click", (e) => {
-    e.preventDefault(); // Prevent form submission
+  request.onupgradeneeded = (event) => {
+    db = event.target.result;
+    if (!db.objectStoreNames.contains("folders")) {
+      db.createObjectStore("folders", { keyPath: "name" });
+    }
+  };
 
-    const username = usernameInput.value;
-    const password = passwordInput.value;
-    const rememberMe = rememberCheckbox.checked;
+  request.onsuccess = (event) => {
+    db = event.target.result;
+    loadFolders(() => {
+      displayFolders();
+      displayNotes();
+      deleteSpecificNotes(); 
+    });
+  };
 
-    if (username && password) {
-      // Save the username to localStorage
-      localStorage.setItem("username", username);
+  request.onerror = (event) => {
+    console.error("IndexedDB error:", event.target.error);
+  };
+}
 
-      // Save password and rememberMe only if "Remember me" is checked
-      if (rememberMe) {
-        localStorage.setItem("password", password);
-        localStorage.setItem("rememberMe", true);
-      } else {
-        localStorage.removeItem("password");
-        localStorage.removeItem("rememberMe");
-      }
+function saveFolders() {
+  const transaction = db.transaction(["folders"], "readwrite");
+  const objectStore = transaction.objectStore("folders");
+  objectStore.put({ name: "data", folders });
 
-      alert("Login data saved to localStorage!");
-      loginContainer.style.display = "none"; // Hide the login container
+  transaction.onerror = (event) => {
+    console.error("Failed to save folders:", event.target.error);
+  };
+}
+
+function loadFolders(callback) {
+  const transaction = db.transaction(["folders"], "readonly");
+  const objectStore = transaction.objectStore("folders");
+  const request = objectStore.get("data");
+
+  request.onsuccess = (event) => {
+    if (event.target.result) {
+      folders = event.target.result.folders;
     } else {
-      alert("Please fill in both fields.");
+      folders = { Home: [] };  // Set Home as the initial folder
     }
+    if (callback) callback();
+  };
+
+  request.onerror = (event) => {
+    console.error("Failed to load folders:", event.target.error);
+  };
+}
+
+/** -------- Folder Management -------- **/
+
+function addFolder() {
+  const folderName = document.getElementById("newFolderName").value.trim();
+  if (folderName && !folders[folderName]) {
+    folders[folderName] = [];
+    saveFolders();
+    displayFolders();
+    document.getElementById("newFolderName").value = "";
+  } else {
+    alert("Folder already exists or name is invalid.");
+  }
+}
+
+function selectFolder(folderName) {
+  currentFolder = folderName;
+  displayNotes();
+}
+
+function deleteFolder(folderName) {
+  // Remove the restriction to delete the Home folder
+  if (folderName !== "Home") {
+    delete folders[folderName];
+    saveFolders();
+    displayFolders();
+    if (folderName === currentFolder) {
+      currentFolder = "Home";  // Switch to "Home" if the current folder is deleted
+      displayNotes();
+    }
+  } else {
+    alert("You cannot delete the Home folder.");
+  }
+}
+
+function displayFolders() {
+  const foldersList = document.getElementById("foldersList");
+  foldersList.innerHTML = "";
+
+  Object.keys(folders).forEach((folderName) => {
+    const folderItem = document.createElement("li");
+    folderItem.textContent = folderName;
+    folderItem.onclick = () => selectFolder(folderName);
+    folderItem.classList.toggle(folderName === currentFolder);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      deleteFolder(folderName);
+    };
+    folderItem.appendChild(deleteBtn);
+
+    foldersList.appendChild(folderItem);
   });
+}
 
-  // Auto-fill the form if "Remember me" was previously checked
-  const savedUsername = localStorage.getItem("username");
-  const savedPassword = localStorage.getItem("password");
-  const isRemembered = localStorage.getItem("rememberMe") === "true";
+/** -------- Note Management -------- **/
 
-  if (savedUsername) usernameInput.value = savedUsername;
-  if (isRemembered && savedPassword) passwordInput.value = savedPassword;
-  if (isRemembered) rememberCheckbox.checked = true;
-});
+function addNote() {
+  const newNote = {
+    id: Date.now(),
+    title: "",
+    content: "",
+    saved: false,
+  };
+  folders[currentFolder].push(newNote);
+  saveFolders();
+  displayNotes();
+}
 
-//////// folder place
+function editNoteTitle(id, event) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  note.title = event.target.value;
+  saveFolders();
+}
 
-// const folderBtn = document.querySelector("#folder");
-// const createNew = document.querySelector(".create-new");
-// const welcomtNoteTaker = document.querySelector("#welcomt-note-taker");
-// const imgOfHomePage = document.querySelector(".img");
+function editNoteContent(id) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  const noteContent = document.getElementById(`note-${id}`).textContent;
+  note.content = noteContent;
+  saveFolders();
+}
 
-// folderBtn.addEventListener("click", () => {
-//   if (createNew.style.display === "none" || createNew.style.display === "") {
-//     welcomtNoteTaker.style.display = "none";
-//     imgOfHomePage.style.display = "none";
-//     createNew.style.display = "block";
-//   }
-// });
+function removeNote(id) {
+  folders[currentFolder] = folders[currentFolder].filter(
+    (note) => note.id !== id
+  );
+  saveFolders();
+  displayNotes();
+}
 
-// const newNote = document.querySelector("#newnote");
-// const partNewNote = document.querySelector(".part-new-note");
+function togglesave(id) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  if (note) {
+    note.saved = !note.saved;
+    saveFolders();
+    displayNotes();
+  } else {
+    console.error("Note not found:", id);
+  }
+}
 
-// let folderCount = parseInt(localStorage.getItem("folderCount")) || 1;
+function deleteSpecificNotes() {
+  const titlesToDelete = ["wert", "erf", "fghjkl"];
+  folders[currentFolder] = folders[currentFolder].filter(
+    (note) => !titlesToDelete.includes(note.title)
+  );
+  saveFolders();
+  displayNotes();
+}
 
-// newNote.addEventListener("click", () => {
-//   if (
-//     partNewNote.style.display === "none" ||
-//     partNewNote.style.display === ""
-//   ) {
-//     partNewNote.style.display = "block";
-//   }
+function displayNotes() {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
 
-//   const folderRow = document.createElement("div");
-//   folderRow.className = "folder-row";
-//   partNewNote.appendChild(folderRow);
+  const notes = folders[currentFolder] || [];
+  notes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+    if (note.saved) {
+      noteElement.classList.add("saved");
+    }
 
-//   const checkboxNumber = document.createElement("div");
-//   checkboxNumber.className = "checkbox-number";
-//   folderRow.appendChild(checkboxNumber);
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${
+        note.id
+      }" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="save-btn" onclick="togglesave(${note.id})">${
+      note.saved ? "Not Save" : "Save"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}
 
-//   const inputs = document.createElement("input");
-//   inputs.setAttribute("type", "checkbox");
-//   inputs.className = "folder-checkbox";
-//   checkboxNumber.appendChild(inputs);
+/** -------- Search & Formatting -------- **/
 
-//   const folderNumber = document.createElement("span");
-//   folderNumber.className = "folder-number";
-//   folderNumber.textContent = folderCount.toString().padStart(2, "0");
-//   checkboxNumber.appendChild(folderNumber);
+function searchNotes() {
+  const query = document.getElementById("searchBar").value.toLowerCase();
+  const notes = folders[currentFolder].filter(
+    (note) =>
+      note.title.toLowerCase().includes(query) ||
+      note.content.toLowerCase().includes(query)
+  );
+  displayFilteredNotes(notes);
+}
 
-//   const folderTitle = document.createElement("input");
-//   folderTitle.className = "folder-title";
-//   folderTitle.setAttribute("type", "text");
-//   folderTitle.placeholder = "Enter Title";
-//   folderRow.appendChild(folderTitle);
+function displayFilteredNotes(filteredNotes) {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
 
-//   const dateTime = document.createElement("div");
-//   dateTime.className = "date-time";
-//   folderRow.appendChild(dateTime);
+  filteredNotes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+    if (note.saved) {
+      noteElement.classList.add("saved");
+    }
 
-//   const currentDate = new Date();
-//   const formattedDate = currentDate.toLocaleDateString();
-//   const formattedTime = currentDate.toLocaleTimeString([], {
-//     hour: "2-digit",
-//     minute: "2-digit",
-//     hour12: true,
-//   });
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${
+        note.id
+      }" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="save-btn" onclick="togglesave(${note.id})">${
+      note.saved ? "Not Save" : "Save"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}
 
-//   const folderDate = document.createElement("folder-date");
-//   folderDate.className = "folder-date";
-//   folderDate.textContent = formattedDate;
-//   dateTime.appendChild(folderDate);
+function formatText(command) {
+  document.execCommand(command, false, null);
+}
 
-//   const anchor = document.createElement("a");
-//   anchor.href = '../page/note.html';
-//   btnOpen.appendChild(anchor);
+function changeFontFamily(event) {
+  const fontFamily = event.target.value;
+  document.execCommand("fontName", false, fontFamily);
+}
 
-//   const folderTime = document.createElement("span");
-//   folderTime.className = "folder-time";
-//   folderTime.textContent = formattedTime;
-//   dateTime.appendChild(folderTime);
+function changeFontSize(event) {
+  const fontSize = event.target.value;
+  document.execCommand("styleWithCSS", true, null);
+  document.execCommand("fontSize", false, "7");
+  document.querySelectorAll("font[size='7']").forEach((font) => {
+    font.style.fontSize = fontSize;
+  });
+}
 
-//   const btnOpen = document.createElement("button");
-//   btnOpen.className = "folder-open-btn";
-//   btnOpen.textContent = "open";
-//   folderRow.appendChild(btnOpen);
+function changeTextColor(event) {
+  const color = event.target.value;
+  document.execCommand("foreColor", false, color);
+}
 
-//   folderCount++;
-//   localStorage.setItem("folderCount", folderCount);
-// });
-
-// const homepage = document.querySelector("#home");
-
-// homepage.addEventListener("click", () => {
-//   if (
-//     createNew.style.display === "block" &&
-//     partNewNote.style.display === "block"
-//   ) {
-//     welcomtNoteTaker.style.display = "block";
-//     imgOfHomePage.style.display = "block";
-//     createNew.style.display = "none";
-//     partNewNote.style.display = "none";
-//   }
-// });
-
-// const deleteBtn = document.getElementById("dl-del");
-
-// deleteBtn.addEventListener("click", () => {
-//   const checkedCheckboxes = document.querySelectorAll(
-//     ".folder-checkbox:checked"
-//   );
-
-//   checkedCheckboxes.forEach((checkbox) => {
-//     const folderRow = checkbox.closest(".folder-row");
-//     folderRow.remove();
-//   });
-
-//   const remainingFolders = document.querySelectorAll(".folder-row");
-//   remainingFolders.forEach((folderRow, index) => {
-//     const folderNumber = folderRow.querySelector(".folder-number");
-//     folderNumber.textContent = (index + 1).toString().padStart(2, "0");
-//   });
-
-//   folderCount = remainingFolders.length + 1;
-//   localStorage.setItem("folderCount", folderCount);
-// });
-
-// const folderOpenBtn = document.querySelectorAll(".folder-open-btn");
-
+/** -------- Initialization -------- **/
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Login Section
-  const loginContainer = document.querySelector(".login-container");
-  const signUp = document.querySelector("#sing-up");
-  const submit = document.querySelector("#submit");
-  const usernameInput = document.querySelector("#username");
-  const passwordInput = document.querySelector("#passwords");
-  const rememberCheckbox = document.querySelector("#remember");
-
-  // Show the login container when the "Sign up" button is clicked
-  signUp.addEventListener("click", () => {
-    loginContainer.style.display = "block";
-  });
-
-  // Handle form submission
-  submit.addEventListener("click", (e) => {
-    e.preventDefault();
-    const username = usernameInput.value;
-    const password = passwordInput.value;
-    const rememberMe = rememberCheckbox.checked;
-
-    if (username && password) {
-      localStorage.setItem("username", username);
-
-      if (rememberMe) {
-        localStorage.setItem("password", password);
-        localStorage.setItem("rememberMe", true);
-      } else {
-        localStorage.removeItem("password");
-        localStorage.removeItem("rememberMe");
-      }
-
-      alert("Login data saved to localStorage!");
-      loginContainer.style.display = "none";
-    } else {
-      alert("Please fill in both fields.");
-    }
-  });
-
-  // Auto-fill login form if saved data exists
-  const savedUsername = localStorage.getItem("username");
-  const savedPassword = localStorage.getItem("password");
-  const isRemembered = localStorage.getItem("rememberMe") === "true";
-
-  if (savedUsername) usernameInput.value = savedUsername;
-  if (isRemembered && savedPassword) passwordInput.value = savedPassword;
-  if (isRemembered) rememberCheckbox.checked = true;
-
-  // Folder Management
-  const folderBtn = document.querySelector("#folder");
-  const createNew = document.querySelector(".create-new");
-  const welcomtNoteTaker = document.querySelector("#welcomt-note-taker");
-  const imgOfHomePage = document.querySelector(".img");
-
-  folderBtn.addEventListener("click", () => {
-    if (createNew.style.display === "none" || createNew.style.display === "") {
-      welcomtNoteTaker.style.display = "none";
-      imgOfHomePage.style.display = "none";
-      createNew.style.display = "block";
-    }
-  });
-
-  const newNote = document.querySelector("#newnote");
-  const partNewNote = document.querySelector(".part-new-note");
-  let folderCount = parseInt(localStorage.getItem("folderCount")) || 1;
-
-  newNote.addEventListener("click", () => {
-    if (partNewNote.style.display === "none" || partNewNote.style.display === "") {
-      partNewNote.style.display = "block";
-    }
-
-    const folderRow = document.createElement("div");
-    folderRow.className = "folder-row";
-    partNewNote.appendChild(folderRow);
-
-    const checkboxNumber = document.createElement("div");
-    checkboxNumber.className = "checkbox-number";
-    folderRow.appendChild(checkboxNumber);
-
-    const inputs = document.createElement("input");
-    inputs.setAttribute("type", "checkbox");
-    inputs.className = "folder-checkbox";
-    checkboxNumber.appendChild(inputs);
-
-    const folderNumber = document.createElement("span");
-    folderNumber.className = "folder-number";
-    folderNumber.textContent = folderCount.toString().padStart(2, "0");
-    checkboxNumber.appendChild(folderNumber);
-
-    const folderTitle = document.createElement("input");
-    folderTitle.className = "folder-title";
-    folderTitle.setAttribute("type", "text");
-    folderTitle.placeholder = "Enter Title";
-    folderRow.appendChild(folderTitle);
-
-    const dateTime = document.createElement("div");
-    dateTime.className = "date-time";
-    folderRow.appendChild(dateTime);
-
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString();
-    const formattedTime = currentDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-    const folderDate = document.createElement("span");
-    folderDate.className = "folder-date";
-    folderDate.textContent = formattedDate;
-    dateTime.appendChild(folderDate);
-
-    const folderTime = document.createElement("span");
-    folderTime.className = "folder-time";
-    folderTime.textContent = formattedTime;
-    dateTime.appendChild(folderTime);
-
-    const btnOpen = document.createElement("button");
-    btnOpen.className = "folder-open-btn";
-
-    const anchor = document.createElement("a");
-    anchor.href = '../page/note.html';
-    anchor.textContent = "open";
-    btnOpen.appendChild(anchor);
-
-    folderRow.appendChild(btnOpen);
-
-    folderCount++;
-    localStorage.setItem("folderCount", folderCount);
-  });
-
-  const homepage = document.querySelector("#home");
-  homepage.addEventListener("click", () => {
-    if (createNew.style.display === "block" && partNewNote.style.display === "block") {
-      welcomtNoteTaker.style.display = "block";
-      imgOfHomePage.style.display = "block";
-      createNew.style.display = "none";
-      partNewNote.style.display = "none";
-    }
-  });
-
-  const deleteBtn = document.getElementById("dl-del");
-  deleteBtn.addEventListener("click", () => {
-    const checkedCheckboxes = document.querySelectorAll(".folder-checkbox:checked");
-
-    checkedCheckboxes.forEach((checkbox) => {
-      const folderRow = checkbox.closest(".folder-row");
-      folderRow.remove();
-    });
-
-    const remainingFolders = document.querySelectorAll(".folder-row");
-    remainingFolders.forEach((folderRow, index) => {
-      const folderNumber = folderRow.querySelector(".folder-number");
-      folderNumber.textContent = (index + 1).toString().padStart(2, "0");
-    });
-
-    folderCount = remainingFolders.length + 1;
-    localStorage.setItem("folderCount", folderCount);
-  });
+  initializeDB();
 });
