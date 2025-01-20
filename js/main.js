@@ -1,8 +1,20 @@
-// Initialize folders from localStorage or set default
+// Initialize folders and trash from localStorage
 let folders = JSON.parse(localStorage.getItem("folders")) || { Default: [] };
-let currentFolder = "Default";
+let deletedFolders = JSON.parse(localStorage.getItem("deletedFolders")) || {}; 
+let currentFolder = "Default"; // default folder
 
 /** -------- Folder Management -------- **/
+// Save folders and deleted folders to localStorage
+function saveFolders() {
+  localStorage.setItem("folders", JSON.stringify(folders));
+  localStorage.setItem("deletedFolders", JSON.stringify(deletedFolders));
+}
+
+// Toggle folder list dropdown
+function toggleFolderList() {
+  const folderListDropdown = document.getElementById("folderListDropdown");
+  folderListDropdown.style.display = folderListDropdown.style.display === "block" ? "none" : "block";
+}
 
 // Create a new folder
 function addFolder() {
@@ -28,7 +40,7 @@ function saveFolders() {
     localStorage.setItem("folders", JSON.stringify(folders));
 }
 
-// Delete a folder
+// Delete a folder (move to trash)
 function deleteFolder(folderName) {
     if (folderName !== "Default") { // Prevent deleting the Default folder
         delete folders[folderName]; // Remove the folder
@@ -41,6 +53,44 @@ function deleteFolder(folderName) {
     } else {
         alert("You cannot delete the Default folder.");
     }
+}
+
+// Restore a deleted folder
+function restoreFolder(folderName) {
+  if (deletedFolders[folderName]) {
+    folders[folderName] = deletedFolders[folderName]; // Restore folder
+    delete deletedFolders[folderName]; // Remove from trash
+    saveFolders();
+    displayFolders();
+    displayNotes(); 
+  }
+}
+
+// View trash (show deleted folders)
+function viewTrash() {
+  const trashView = document.getElementById("trashView");
+  const trashList = document.getElementById("trashList");
+  trashList.innerHTML = ""; // Clear previous content
+
+  // Display deleted folders
+  Object.keys(deletedFolders).forEach((folderName) => {
+    const folderItem = document.createElement("div");
+    folderItem.classList.add("trash-folder");
+    
+    folderItem.innerHTML = `
+      <span>${folderName}</span>
+      <button onclick="restoreFolder('${folderName}')">Restore</button>
+    `;
+    trashList.appendChild(folderItem);
+  });
+
+  // Display trash view
+  trashView.style.display = "block";
+}
+
+// Close trash view
+function closeTrash() {
+  document.getElementById("trashView").style.display = "none";
 }
 
 // Display folders in the sidebar
@@ -68,7 +118,6 @@ function displayFolders() {
 }
 
 /** -------- Note Management -------- **/
-
 // Create a new note
 function addNote() {
     const newNote = {
@@ -199,7 +248,6 @@ function changeFontFamily(event) {
     document.execCommand("fontName", false, fontFamily);
 }
 
-// Change font size for the selected text
 function changeFontSize(event) {
     const fontSize = event.target.value;
     document.execCommand("styleWithCSS", true, null);
@@ -209,7 +257,6 @@ function changeFontSize(event) {
     });
 }
 
-// Change text color for the selected text
 function changeTextColor(event) {
     const color = event.target.value;
     document.execCommand("foreColor", false, color);

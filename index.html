@@ -1,58 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Note Taker with Folders</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/main.js" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body>
-  <div class="container">
-    <div class="sidebar">
-      <h3>Folders</h3>
-      <ul id="foldersList" class="folders-list"></ul>
-      <input type="text" id="newFolderName" placeholder="New Folder Name">
-      <button onclick="addFolder()">Create Folder</button>
-    </div>
-    <div class="notes-section">
-      <div class="toolbar">
-        <button id="createNoteBtn" onclick="addNote()">Create Note</button>
-        <label><i class="fa-solid fa-magnifying-glass search"></i></label>
-        <input type="text" id="searchBar" placeholder="Search Notes" onkeyup="searchNotes()">
-        <div class="formatting-tools">
-          <button onclick="formatText('bold')">B</button>
-          <button onclick="formatText('italic')">I</button>
-          <button onclick="formatText('underline')">U</button>
-          <select onchange="changeFontFamily(event)">
-            <option value="Arial">Arial</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Times New Roman">Times New Roman</option>
-            <option value="Lucida Console">Lucida Console</option>
-            <option value="monospace">Monospace</option>
-            <option value="Helvetica">Helvetica</option>
-            <option value="Verdana">Verdana</option>
-            <option value="DaunPenh">DaunPenh</option>
-            <option value="Arial Black">Arial Black</option>
-            <option value="Bell MT">Bell MT</option>
-            <option value="Forte">Forte</option>
-          </select>
-          <select onchange="changeFontSize(event)">
-            <option value="12px">12px</option>
-            <option value="14px">14px</option>
-            <option value="16px">16px</option>
-            <option value="18px">18px</option>
-            <option value="20px">20px</option>
-            <option value="22px">22px</option>
-            <option value="24px">24px</option>
-          </select>
-          <input type="color" onchange="changeTextColor(event)">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Note Taker with Folders</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script src="/js/main.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div class="logo">
+          <img src="images/noteLogo.jpg" alt="" />
+          <div>
+            <h3>Note Taker app</h3>
+            <p>You can take note</p>
+          </div>
+        </div>
+        <h3>Folders</h3>
+        <div class="save-data">
+          <button id="home" onclick="goToHome()"><i class="fa-solid fa-house"></i> Home</button>
+          <button id="folder"><i class="fa-regular fa-note-sticky"></i> Folder</button>
+        </div>
+        <div id="folderListDropdown" class="folder-list-dropdown" style="display: none;">
+          <ul id="foldersList" class="folders-list"></ul>
+        </div>
+        <input type="text" id="newFolderName" placeholder="New Folder Name" />
+        <button onclick="addFolder()">Create Folder</button>
+        <div id="trashContainer">
+          <button id="trash" onclick="viewTrash()"><i class="fa-solid fa-trash"></i> Trash</button>
         </div>
       </div>
-      <div id="notesContainer" class="notes-container"></div>
+      
+      <div class="notes-section">
+        <div class="toolbar">
+          <button id="createNoteBtn" onclick="addNote()">Create Note</button>
+          <input
+            type="text"
+            id="searchBar"
+            placeholder="Search Notes"
+            onkeyup="searchNotes()"
+          />
+          <div class="formatting-tools">
+            <button onclick="formatText('bold')">Bold</button>
+            <button onclick="formatText('italic')">Italic</button>
+            <button onclick="formatText('underline')">Underline</button>
+            <select onchange="changeFontFamily(event)">
+              <option value="Arial">Arial</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Georgia">Georgia</option>
+            </select>
+            <select onchange="changeFontSize(event)">
+              <option value="12px">12px</option>
+              <option value="14px">14px</option>
+              <option value="16px">16px</option>
+              <option value="18px">18px</option>
+              <option value="20px">20px</option>
+              <option value="22px">22px</option>
+              <option value="24px">24px</option>
+            </select>
+            <input type="color" onchange="changeTextColor(event)" />
+          </div>
+        </div>
+        <div id="notesContainer" class="notes-container"></div>
+      </div>
     </div>
-  </div>
-</body>
+
+    <!-- Trash View -->
+    <div id="trashView" class="trash-view" style="display: none;">
+      <h3>Deleted Folders</h3>
+      <div id="trashList" class="trash-list"></div>
+      <div class="trash-actions">
+        <button onclick="closeTrash()" class="close-trash-btn">Close</button>
+      </div>
+    </div>
+  </body>
 </html>
