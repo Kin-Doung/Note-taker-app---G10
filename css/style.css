@@ -14,29 +14,37 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-.logo{
+
+/* Logo Section */
+.logo {
   flex-wrap: wrap;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
 }
-img{
+
+img {
   width: 100px;
   border-radius: 100%;
   margin: 0 auto;
 }
+
+/* Main Container */
 .container {
   display: flex;
   flex-direction: row;
   width: 100%;
 }
-.save-data{
+
+.save-data {
   font-size: 20px;
   width: 50px;
-
 }
-#folder{
+
+/* Sidebar */
+#folder,
+#home {
   border: none;
   padding: 10px;
   background-color: gray;
@@ -45,15 +53,8 @@ img{
   margin-bottom: 10px;
   text-align: left;
 }
-#home{
-  padding: 10px;
-  background-color: gray;
-  width: 250px;
-  margin-left: -3px;
-  text-align: left;
-  margin-bottom: 10px;
-}
-/******** Sidebar ********/
+
+/* Sidebar Styles */
 .sidebar {
   width: 20%;
   background-color: #ffffff;
@@ -69,6 +70,7 @@ img{
   font-weight: 600;
 }
 
+/* Folders List */
 .folders-list {
   list-style: none;
   padding: 0;
@@ -102,6 +104,7 @@ img{
   border-radius: 5px;
 }
 
+/* Button Styles */
 button {
   margin-left: 20px;
   padding: 5px;
@@ -118,13 +121,14 @@ button:hover {
   background-color: #0056b3;
 }
 
-/******** Notes Section ********/
+/* Notes Section */
 .notes-section {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
 }
 
+/* Toolbar Styles */
 .toolbar {
   display: flex;
   justify-content: space-between;
@@ -161,6 +165,7 @@ button:hover {
   background-color: #ddd;
 }
 
+/* Notes Container */
 .notes-container {
   margin-top: 20px;
   display: grid;
@@ -173,6 +178,7 @@ button:hover {
   overflow-y: auto;
 }
 
+/* Note Styles */
 .note {
   background-color: #ffffff;
   padding: 20px;
@@ -206,6 +212,7 @@ button:hover {
   background-color: #f9f9f9;
 }
 
+/* Pin & Delete Buttons */
 .pin-btn,
 .delete-btn {
   padding: 8px 10px;
@@ -235,7 +242,8 @@ button:hover {
   background-color: #c0392b;
 }
 
-#trash{
+/* Trash Section */
+#trash {
   margin-top: 100px;
   margin-left: -10px;
   width: 250px;
@@ -244,7 +252,7 @@ button:hover {
   text-align: left;
 }
 
-/* Trash View Style */
+/* Trash View Styles */
 .trash-view {
   position: absolute;
   top: 0;
@@ -302,6 +310,7 @@ button:hover {
   background-color: #45a049;
 }
 
+/* Trash View Actions */
 .trash-actions {
   text-align: center;
 }
@@ -320,9 +329,7 @@ button:hover {
   background-color: #d32f2f;
 }
 
-
-
-/******** Responsive Design ********/
+/* Responsive Design */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
@@ -358,6 +365,7 @@ button:hover {
   }
 }
 
+/* Navbar */
 .navbar {
   background-color: #333;
   padding: 10px 20px;
@@ -366,3 +374,119 @@ button:hover {
   height: 8vh;
 }
 
+.fa-magnifying-glass {
+  position: relative;
+  left: 390px;
+  top: 2px;
+  color: gray;
+}
+
+#searchBar {
+  width: 700px;
+}
+
+/* PDF Button */
+.pdf-btn {
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  margin: 5px 0;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.pdf-btn:hover {
+  background-color: #45a049;
+}
+
+/* Note Content */
+.note-content {
+  background-color: #f9f9f9; /* Light grey background for the content */
+  padding: 8px;
+  border-radius: 4px;
+  min-height: 40px; /* Minimum height for content */
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+/* Pin & Delete Buttons in Notes */
+.pin-btn,
+.delete-btn {
+  margin: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+/* Pin Button */
+.pin-btn {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+}
+
+.pin-btn:hover {
+  background-color: #f57c00;
+}
+
+/* Delete Button */
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Note Title Input */
+.note-title {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+/* Hover Effect for Note Title */
+.note-title:hover {
+  border-color: #4CAF50;
+}
+
+/* Folder List */
+#foldersList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#foldersList li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+#foldersList li.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#foldersList li:hover {
+  background-color: #f1f1f1;
+}
+
+/* Folder Delete Button */
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
