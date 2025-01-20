@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: 'Poppins', Arial, sans-serif;
+  font-family: "Poppins", Arial, sans-serif;
   color: #333;
   background-color: #f9f9f9;
   margin: 0;
@@ -14,14 +14,14 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-.logo{
+.logo {
   flex-wrap: wrap;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
 }
-img{
+img {
   width: 100px;
   border-radius: 100%;
   margin: 0 auto;
@@ -31,12 +31,11 @@ img{
   flex-direction: row;
   width: 100%;
 }
-.save-data{
+.save-data {
   font-size: 20px;
   width: 50px;
-
 }
-#folder{
+#folder {
   border: none;
   padding: 10px;
   background-color: gray;
@@ -45,7 +44,7 @@ img{
   margin-bottom: 10px;
   text-align: left;
 }
-#home{
+#home {
   padding: 10px;
   background-color: gray;
   width: 250px;
@@ -235,7 +234,7 @@ button:hover {
   background-color: #c0392b;
 }
 
-#trash{
+#trash {
   margin-top: 100px;
   margin-left: -10px;
   width: 250px;
@@ -290,7 +289,7 @@ button:hover {
 }
 
 .trash-folder button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -320,8 +319,6 @@ button:hover {
 .close-trash-btn:hover {
   background-color: #d32f2f;
 }
-
-
 
 /******** Responsive Design ********/
 @media (max-width: 768px) {
