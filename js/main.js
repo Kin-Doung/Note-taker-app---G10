@@ -1,146 +1,237 @@
-// Import necessary Firebase functions
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  set,
-} from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+// Initialize folders from localStorage or set default
+let folders = JSON.parse(localStorage.getItem("folders")) || { Default: [] };
+let currentFolder = "Default";
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCzrj6bCN4WSslr7XzOrbtQsmnnB-GTrS4",
-  authDomain: "note-taker-8039e.firebaseapp.com",
-  databaseURL: "https://note-taker-8039e-default-rtdb.firebaseio.com",
-  projectId: "note-taker-8039e",
-  storageBucket: "note-taker-8039e.firebasestorage.app",
-  messagingSenderId: "810265620163",
-  appId: "1:810265620163:web:adcadcf960dd4f2cc57c76",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// Database-related functions
-function initializeDatabaseFunctions() {
-  const button = document.querySelector("#button");
-  const formContainer = document.querySelector(".form-container");
-  const btn = document.querySelector(".submit-btn");
-
-  // Show form on button click
-  button.addEventListener("click", () => {
-    formContainer.style.display = "block";
-  });
-
-  // Handle form submission and save data to Firebase
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const firstName = document.getElementById("first_name").value;
-    const lastName = document.getElementById("last_name").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    saveUserData(firstName, lastName, email, password);
-
-    formContainer.style.display = "none";
-  });
+/** -------- Folder Management -------- **/
+// Toggle Folder List Dropdown visibility
+function toggleFolderList() {
+  const folderListDropdown = document.getElementById("folderListDropdown");
+  folderListDropdown.style.display = folderListDropdown.style.display === "block" ? "none" : "block";
 }
 
-function saveUserData(firstName, lastName, email, password) {
-  const userRef = ref(db, "users/" + email.replace(".", "_"));
-
-  set(userRef, {
-    first_name: firstName,
-    last_name: lastName,
-    email: email,
-    password: password,
-  })
-    .then(() => {
-      // Using SweetAlert for success
-      Swal.fire({
-        icon: "success",
-        title: "User data saved successfully!",
-        text: "The user data has been successfully stored in the database.",
-      });
-    })
-    .catch((error) => {
-      // Using SweetAlert for error
-      Swal.fire({
-        icon: "error",
-        title: "Error saving data",
-        text: "Failed to save data. Please try again.",
-      });
-    });
-}
-
-// Login-related functions
-function initializeLoginFunctions() {
-  const loginContainer = document.querySelector(".login-container");
-  const signUpButton = document.querySelector("#sing-up");
-  const submitButton = document.querySelector("#submit");
-  const usernameInput = document.querySelector("#username");
-  const passwordInput = document.querySelector("#passwords");
-  const rememberCheckbox = document.querySelector("#remember");
-
-  // Show login container on "Sign up" button click
-  signUpButton.addEventListener("click", () => {
-    loginContainer.style.display = "block";
-  });
-
-  // Handle login form submission
-  submitButton.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const username = usernameInput.value.trim(); // Trim to remove leading/trailing whitespace
-    const password = passwordInput.value.trim(); // Trim to remove leading/trailing whitespace
-    const rememberMe = rememberCheckbox.checked;
-
-    // Ensure both username and password are not empty
-    if (username === "" || password === "") {
-      // Using SweetAlert for error
-      Swal.fire({
-        icon: "error",
-        title: "Please fill in both fields.",
-        text: "Make sure both the username and password are filled.",
-      });
-    } else {
-      saveLoginDataToLocalStorage(username, password, rememberMe);
-      // Using SweetAlert for success
-      Swal.fire({
-        icon: "success",
-        title: "Login data saved!",
-        text: "Login data has been saved to localStorage.",
-      });
-      loginContainer.style.display = "none";
-    }
-  });
-
-  autoFillLoginForm(usernameInput, passwordInput, rememberCheckbox);
-}
-
-function saveLoginDataToLocalStorage(username, password, rememberMe) {
-  localStorage.setItem("username", username);
-
-  if (rememberMe) {
-    localStorage.setItem("password", password);
-    localStorage.setItem("rememberMe", true);
+// Create a new folder
+function addFolder() {
+  const folderName = document.getElementById("newFolderName").value.trim();
+  if (folderName && !folders[folderName]) {
+    folders[folderName] = []; // Initialize the folder with an empty array
+    saveFolders();
+    displayFolders();
+    document.getElementById("newFolderName").value = "";
   } else {
-    localStorage.removeItem("password");
-    localStorage.removeItem("rememberMe");
+    alert("Folder already exists or name is invalid.");
   }
 }
 
-function autoFillLoginForm(usernameInput, passwordInput, rememberCheckbox) {
-  const savedUsername = localStorage.getItem("username");
-  const savedPassword = localStorage.getItem("password");
-  const isRemembered = localStorage.getItem("rememberMe") === "true";
-
-  if (savedUsername) usernameInput.value = savedUsername;
-  if (isRemembered && savedPassword) passwordInput.value = savedPassword;
-  if (isRemembered) rememberCheckbox.checked = true;
+// Switch to a different folder
+function selectFolder(folderName) {
+  currentFolder = folderName;
+  displayNotes();
+  document.getElementById("folderListDropdown").style.display = "none"; // Close the dropdown after selecting folder
 }
 
-// Initialize all functions
-initializeDatabaseFunctions();
-document.addEventListener("DOMContentLoaded", initializeLoginFunctions);
+// Save folders to localStorage
+function saveFolders() {
+  localStorage.setItem("folders", JSON.stringify(folders));
+}
+
+// Delete a folder
+function deleteFolder(folderName) {
+  if (folderName !== "Default") { // Prevent deleting the Default folder
+    delete folders[folderName]; // Remove the folder
+    saveFolders();
+    displayFolders();
+    if (folderName === currentFolder) {
+      currentFolder = "Default"; // Switch to Default folder if current one is deleted
+      displayNotes();
+    }
+  } else {
+    alert("You cannot delete the Default folder.");
+  }
+}
+
+// Edit folder name
+function editFolder(oldFolderName) {
+  const newFolderName = prompt("Enter a new folder name:", oldFolderName);
+  if (newFolderName && newFolderName !== oldFolderName && !folders[newFolderName]) {
+    // Update folder name in the folders object
+    folders[newFolderName] = folders[oldFolderName];
+    delete folders[oldFolderName]; // Remove the old folder
+    saveFolders();
+    displayFolders(); // Re-render the folder list
+  } else {
+    alert("Folder name is invalid or already exists.");
+  }
+}
+
+// Display folders in the sidebar
+function displayFolders() {
+  const foldersList = document.getElementById("foldersList");
+  foldersList.innerHTML = "";
+
+  Object.keys(folders).forEach((folderName) => {
+    const folderItem = document.createElement("li");
+    folderItem.textContent = folderName;
+    folderItem.onclick = () => selectFolder(folderName);
+    folderItem.classList.toggle("active", folderName === currentFolder);
+
+    // Add Edit button for each folder
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.onclick = (e) => {
+      e.stopPropagation(); // Prevent triggering folder selection
+      editFolder(folderName); // Call the edit function
+    };
+    folderItem.appendChild(editBtn);
+
+    // Add Delete button for each folder
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation(); // Prevent triggering folder selection
+      deleteFolder(folderName);
+    };
+    folderItem.appendChild(deleteBtn);
+
+    foldersList.appendChild(folderItem);
+  });
+}
+
+/** -------- Note Management -------- **/
+// Create a new note
+function addNote() {
+  const newNote = {
+    id: Date.now(),
+    title: "",
+    content: "",
+    pinned: false,
+  };
+  folders[currentFolder].push(newNote);
+  saveFolders();
+  displayNotes();
+}
+
+// Edit note title
+function editNoteTitle(id, event) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  note.title = event.target.value;
+  saveFolders();
+}
+
+// Edit note content
+function editNoteContent(id) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  const noteContent = document.getElementById(`note-${id}`).textContent;
+  note.content = noteContent;
+  saveFolders();
+}
+
+// Delete a note
+function removeNote(id) {
+  folders[currentFolder] = folders[currentFolder].filter((note) => note.id !== id);
+  saveFolders();
+  displayNotes();
+}
+
+// Pin or unpin a note
+function togglePin(id) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  if (note) {
+    note.pinned = !note.pinned;
+    saveFolders();
+    displayNotes();
+  } else {
+    console.error("Note not found:", id);
+  }
+}
+
+// Delete specific notes based on title
+function deleteSpecificNotes() {
+  const titlesToDelete = ["wert", "erf", "fghjkl"];
+  folders[currentFolder] = folders[currentFolder].filter(
+    (note) => !titlesToDelete.includes(note.title)
+  );
+  saveFolders();
+  displayNotes();
+}
+
+// Display notes in the current folder
+function displayNotes() {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
+
+  const notes = folders[currentFolder];
+  notes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+    if (note.pinned) {
+      noteElement.classList.add("pinned");
+    }
+
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${
+      note.pinned ? "Unpin" : "Pin"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}
+
+/** -------- Search and Formatting -------- **/
+// Search notes
+function searchNotes() {
+  const query = document.getElementById("searchBar").value.toLowerCase();
+  const filteredNotes = folders[currentFolder].filter((note) =>
+    note.title.toLowerCase().includes(query)
+  );
+  displayFilteredNotes(filteredNotes);
+}
+
+// Display filtered notes based on search query
+function displayFilteredNotes(filteredNotes) {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
+
+  filteredNotes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${
+      note.pinned ? "Unpin" : "Pin"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}
+
+// Formatting functions for the toolbar
+function formatText(style) {
+  document.execCommand(style, false, null);
+}
+
+function changeFontFamily(event) {
+  document.execCommand("fontName", false, event.target.value);
+}
+
+function changeFontSize(event) {
+  document.execCommand("fontSize", false, event.target.value);
+}
+
+function changeTextColor(event) {
+  document.execCommand("foreColor", false, event.target.value);
+}
+
+// Event listener to toggle folder list on Folder button click
+document.getElementById("folder").addEventListener("click", toggleFolderList);
+
+// Initialize folders display
+displayFolders();
+displayNotes();

@@ -3,171 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Note Taker Application</title>
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Note Taker Application</title>
-      <link rel="stylesheet" href="css/style.css" />
-      <script src="js/main.js" type="module" defer></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-        crossorigin="anonymous"
-        referrerpolicy="no-referrer"
-      />
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      />
+    <title>Note Taker with Folders</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script src="/js/main.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
-    <div class="login-container" style="display: none">
-      <h1 id="log-Up">Login</h1>
-      <form id="loginForm">
-        <i class="fa-solid fa-user"></i>
-         <input
-          type="text"
-          name="username"
-          id="username"
-          placeholder="Username (Email)"
-          required
-        />
-        <i class="fa-solid fa-lock"></i>
-        <input
-          type="password"
-          name="password"
-          id="passwords"
-          placeholder="Password"
-          required
-        />
-        <div id="checkbox">
-          <input type="checkbox" name="remember" id="remember" />
-          <label for="remember">Remember me</label>
-        </div>
-        <a href="/forgot-password" id="forgotPassword">Forgot Password?</a>
-        <button type="submit" id="submit">Login</button>
-        <a href="/register" id="register">Register</a>
-      </form>
-    </div>
-    <div class="form-container" style="display: none">
-      <h1 id="login">Login</h1>
-      <form id="form_signup">
-        <label>First Name</label>
-        <i class="fa-solid fa-user formSing"></i>
-        <input
-          type="text"
-          name="first_name"
-          id="first_name"
-          placeholder="First Name"
-          required
-        />
-        <label>Last Name</label>
-        <i class="fa-solid fa-user formSing"></i>
-        <input
-          type="text"
-          name="last_name"
-          id="last_name"
-          placeholder="Last Name"
-          required
-        />
-        <label>Email</label>
-        <i class="fa-solid fa-envelope formSing"></i>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          placeholder="Email"
-          required
-        />
-        <label>Password</label>
-        <i class="fa-solid fa-lock "></i>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Password"
-          required
-        />
-        <button type="submit" class="submit-btn">Login</button>
-      </form>
-    </div>
-
-    <nav>
-      <div class="navbar">
-        <div class="logo">
-          <img src="/images/noteLogo.jpg" alt="Logo of the website" />
-        </div>
-        <form>
-          <i class="material-icons">search</i>
-          <input type="text" name="text" id="search" placeholder="Search" />
-        </form>
-        <div class="sign-in">
-          <button type="button" id="button">Sign In</button>
-          <button type="button" id="sing-up">Sign Up</button>
-        </div>
-      </div>
-    </nav>
-
     <div class="container">
-      <div class="left-side">
-        <div class="header">
-          <div class="home">
-            <i class="fa-solid fa-house"></i>
-            <button id="home">Home</button>
-          </div>
-          <div class="note">
-            <i class="fa-regular fa-note-sticky"></i>
-            <button id="note">Notes</button>
+      <div class="sidebar">
+        <div class="logo">
+          <img src="images/noteLogo.jpg" alt="" />
+          <div>
+            <h3>Note Taker app</h3>
+            <p>You can take note</p>
           </div>
         </div>
-        <div class="folder">
-          <i class="fa-solid fa-folder"></i>
-          <button id="folder"><span>Folder</span></button>
+        <h3>Folders</h3>
+        <div class="save-data">
+          <button id="home"><i class="fa-solid fa-house"></i> Home</button>
+          <button id="folder"><i class="fa-regular fa-note-sticky"></i> Folder</button>
         </div>
-        <div class="draft-cate">
-          <div class="draft">
-            <i class="fa-solid fa-file-pen"></i>
-            <button id="draft"><span>Drafts</span></button>
-          </div>
-          <div class="categories">
-            <i class="fa-solid fa-list"></i>
-            <button id="cate"><p>Categories</p></button>
-          </div>
+        <div id="folderListDropdown" class="folder-list-dropdown" style="display: none;">
+          <ul id="foldersList" class="folders-list"></ul>
         </div>
+        <input type="text" id="newFolderName" placeholder="New Folder Name" />
+        <button onclick="addFolder()">Create Folder</button>
       </div>
-      <div class="right-side">
-        <h1 id="welcomt-note-taker">Welcome to Note Taker</h1>
-        <div class="create-new">
-            <div class="all">
-                <div class="create-new-note">
-                    <button id="new-note">
-                        <span id="newnote">New Note</span>
-                    </button>
-                    <i class="fa-solid fa-circle-plus"></i>
-                </div>
-                <div class="file-edit-view">
-                    <div class="fev">
-                        <span id="file">File</span>
-                        <span id="edit">Edit</span>
-                        <span id="view">View</span>
-                    </div>
-                    <div class="delete">
-                        <i class="fa-solid fa-trash"></i>
-                        <button id="dl-del">
-                            <span id="del">Delete</span>    
-                        </button>
-                    </div>
-                </div>
-            </div>
+      <div class="notes-section">
+        <div class="toolbar">
+          <button id="createNoteBtn" onclick="addNote()">Create Note</button>
+          <input
+            type="text"
+            id="searchBar"
+            placeholder="Search Notes"
+            onkeyup="searchNotes()"
+          />
+          <div class="formatting-tools">
+            <button onclick="formatText('bold')">Bold</button>
+            <button onclick="formatText('italic')">Italic</button>
+            <button onclick="formatText('underline')">Underline</button>
+            <select onchange="changeFontFamily(event)">
+              <option value="Arial">Arial</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Georgia">Georgia</option>
+            </select>
+            <select onchange="changeFontSize(event)">
+              <option value="12px">12px</option>
+              <option value="16px">16px</option>
+              <option value="20px">20px</option>
+            </select>
+            <input type="color" onchange="changeTextColor(event)" />
+          </div>
         </div>
-        <div class="part-new-note">
-        </div>
-        <div class="img">
-          <img src="images/noteImage.jpeg" alt="NoteImage"/>
-        </div>
+        <div id="notesContainer" class="notes-container"></div>
       </div>
     </div>
   </body>
