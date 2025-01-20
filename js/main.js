@@ -1,66 +1,34 @@
-let db;
-let folders = { Home: [] };  
-let currentFolder = "Home"; 
-
-function initializeDB() {
-  const request = indexedDB.open("NotesApp", 1);
-
-  request.onupgradeneeded = (event) => {
-    db = event.target.result;
-    if (!db.objectStoreNames.contains("folders")) {
-      db.createObjectStore("folders", { keyPath: "name" });
-    }
-  };
-
-  request.onsuccess = (event) => {
-    db = event.target.result;
-    loadFolders(() => {
-      displayFolders();
-      displayNotes();
-      deleteSpecificNotes(); 
-    });
-  };
-
-  request.onerror = (event) => {
-    console.error("IndexedDB error:", event.target.error);
-  };
-}
-
-function saveFolders() {
-  const transaction = db.transaction(["folders"], "readwrite");
-  const objectStore = transaction.objectStore("folders");
-  objectStore.put({ name: "data", folders });
-
-  transaction.onerror = (event) => {
-    console.error("Failed to save folders:", event.target.error);
-  };
-}
-
-function loadFolders(callback) {
-  const transaction = db.transaction(["folders"], "readonly");
-  const objectStore = transaction.objectStore("folders");
-  const request = objectStore.get("data");
-
-  request.onsuccess = (event) => {
-    if (event.target.result) {
-      folders = event.target.result.folders;
-    } else {
-      folders = { Home: [] };  // Set Home as the initial folder
-    }
-    if (callback) callback();
-  };
-
-  request.onerror = (event) => {
-    console.error("Failed to load folders:", event.target.error);
-  };
-}
+// Initialize folders and trash from localStorage
+let folders = JSON.parse(localStorage.getItem("folders")) || { Default: [] };
+let deletedFolders = JSON.parse(localStorage.getItem("deletedFolders")) || {}; 
+let currentFolder = "Default"; // default folder
+let showMore = false; // Track if we're showing more folders
 
 /** -------- Folder Management -------- **/
+// Save folders and deleted folders to localStorage
+function saveFolders() {
+  localStorage.setItem("folders", JSON.stringify(folders));
+  localStorage.setItem("deletedFolders", JSON.stringify(deletedFolders));
+}
 
+// Toggle folder list dropdown visibility
+function toggleFolderList() {
+  const folderListDropdown = document.getElementById("folderListDropdown");
+  folderListDropdown.style.display = folderListDropdown.style.display === "block" ? "none" : "block";
+  displayFolders(); // Update the folder display when toggled
+}
+
+// Show More / Show Less logic for folder list
+function toggleMoreFolders() {
+  showMore = !showMore; // Toggle the state
+  displayFolders(); // Update the folder display based on the new state
+}
+
+// Create a new folder
 function addFolder() {
   const folderName = document.getElementById("newFolderName").value.trim();
   if (folderName && !folders[folderName]) {
-    folders[folderName] = [];
+    folders[folderName] = []; 
     saveFolders();
     displayFolders();
     document.getElementById("newFolderName").value = "";
@@ -69,35 +37,88 @@ function addFolder() {
   }
 }
 
+// Switch to a different folder
 function selectFolder(folderName) {
   currentFolder = folderName;
   displayNotes();
+  document.getElementById("folderListDropdown").style.display = "none";
 }
 
+// Go back to Default folder
+function goToHome() {
+  currentFolder = "Default";
+  displayNotes();
+  document.getElementById("folderListDropdown").style.display = "none";
+}
+
+// Delete a folder (move to trash)
 function deleteFolder(folderName) {
-  // Remove the restriction to delete the Home folder
-  if (folderName !== "Home") {
-    delete folders[folderName];
+  if (folderName !== "Default") {
+    deletedFolders[folderName] = folders[folderName]; // Move to trash
+    delete folders[folderName]; // Delete the folder
     saveFolders();
     displayFolders();
     if (folderName === currentFolder) {
-      currentFolder = "Home";  // Switch to "Home" if the current folder is deleted
+      currentFolder = "Default";
       displayNotes();
     }
   } else {
-    alert("You cannot delete the Home folder.");
+    alert("You cannot delete the Default folder.");
   }
 }
 
+// Restore a deleted folder
+function restoreFolder(folderName) {
+  if (deletedFolders[folderName]) {
+    folders[folderName] = deletedFolders[folderName]; // Restore folder
+    delete deletedFolders[folderName]; // Remove from trash
+    saveFolders();
+    displayFolders();
+    displayNotes(); 
+  }
+}
+
+// View trash (show deleted folders)
+function viewTrash() {
+  const trashView = document.getElementById("trashView");
+  const trashList = document.getElementById("trashList");
+  trashList.innerHTML = ""; // Clear previous content
+
+  // Display deleted folders
+  Object.keys(deletedFolders).forEach((folderName) => {
+    const folderItem = document.createElement("div");
+    folderItem.classList.add("trash-folder");
+    
+    folderItem.innerHTML = `
+      <span>${folderName}</span>
+      <button onclick="restoreFolder('${folderName}')">Restore</button>
+    `;
+    trashList.appendChild(folderItem);
+  });
+
+  // Display trash view
+  trashView.style.display = "block";
+}
+
+// Close trash view
+function closeTrash() {
+  document.getElementById("trashView").style.display = "none";
+}
+
+// Display folders in the sidebar with Show More functionality
 function displayFolders() {
   const foldersList = document.getElementById("foldersList");
-  foldersList.innerHTML = "";
+  foldersList.innerHTML = ""; // Clear previous list
 
-  Object.keys(folders).forEach((folderName) => {
+  const folderNames = Object.keys(folders);
+  const visibleFolders = showMore ? folderNames : folderNames.slice(0, 3); // Show more if toggled
+
+  // Loop through the folders and display them
+  visibleFolders.forEach((folderName) => {
     const folderItem = document.createElement("li");
     folderItem.textContent = folderName;
     folderItem.onclick = () => selectFolder(folderName);
-    folderItem.classList.toggle(folderName === currentFolder);
+    folderItem.classList.toggle("active", folderName === currentFolder);
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
@@ -105,32 +126,46 @@ function displayFolders() {
       e.stopPropagation();
       deleteFolder(folderName);
     };
-    folderItem.appendChild(deleteBtn);
 
+    folderItem.appendChild(deleteBtn);
     foldersList.appendChild(folderItem);
   });
+
+  // Show "Show More" or "Show Less" based on state
+  const showMoreButton = document.getElementById("showMoreButton");
+  if (!showMoreButton) {
+    const newShowMoreButton = document.createElement("button");
+    newShowMoreButton.id = "showMoreButton";
+    newShowMoreButton.textContent = showMore ? "Show Less" : "Show More";
+    newShowMoreButton.onclick = toggleMoreFolders;
+    foldersList.appendChild(newShowMoreButton);
+  } else {
+    showMoreButton.textContent = showMore ? "Show Less" : "Show More";
+  }
 }
 
 /** -------- Note Management -------- **/
-
+// Create a new note
 function addNote() {
   const newNote = {
     id: Date.now(),
     title: "",
     content: "",
-    saved: false,
+    pinned: false,
   };
   folders[currentFolder].push(newNote);
   saveFolders();
   displayNotes();
 }
 
+// Edit note title
 function editNoteTitle(id, event) {
   const note = folders[currentFolder].find((note) => note.id === id);
   note.title = event.target.value;
   saveFolders();
 }
 
+// Edit note content
 function editNoteContent(id) {
   const note = folders[currentFolder].find((note) => note.id === id);
   const noteContent = document.getElementById(`note-${id}`).textContent;
@@ -138,18 +173,18 @@ function editNoteContent(id) {
   saveFolders();
 }
 
+// Delete a note
 function removeNote(id) {
-  folders[currentFolder] = folders[currentFolder].filter(
-    (note) => note.id !== id
-  );
+  folders[currentFolder] = folders[currentFolder].filter((note) => note.id !== id);
   saveFolders();
   displayNotes();
 }
 
-function togglesave(id) {
+// Pin or unpin a note
+function togglePin(id) {
   const note = folders[currentFolder].find((note) => note.id === id);
   if (note) {
-    note.saved = !note.saved;
+    note.pinned = !note.pinned;
     saveFolders();
     displayNotes();
   } else {
@@ -157,55 +192,17 @@ function togglesave(id) {
   }
 }
 
-function deleteSpecificNotes() {
-  const titlesToDelete = ["wert", "erf", "fghjkl"];
-  folders[currentFolder] = folders[currentFolder].filter(
-    (note) => !titlesToDelete.includes(note.title)
-  );
-  saveFolders();
-  displayNotes();
-}
-
-function displayNotes() {
-  const notesContainer = document.getElementById("notesContainer");
-  notesContainer.innerHTML = "";
-
-  const notes = folders[currentFolder] || [];
-  notes.forEach((note) => {
-    const noteElement = document.createElement("div");
-    noteElement.classList.add("note");
-    if (note.saved) {
-      noteElement.classList.add("saved");
-    }
-
-    noteElement.innerHTML = `
-      <input type="text" class="note-title" value="${
-        note.title
-      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${
-        note.id
-      }" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="save-btn" onclick="togglesave(${note.id})">${
-      note.saved ? "Not Save" : "Save"
-    }</button>
-      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
-    `;
-    notesContainer.appendChild(noteElement);
-  });
-}
-
-/** -------- Search & Formatting -------- **/
-
+/** -------- Search and Formatting -------- **/
+// Search notes
 function searchNotes() {
   const query = document.getElementById("searchBar").value.toLowerCase();
-  const notes = folders[currentFolder].filter(
-    (note) =>
-      note.title.toLowerCase().includes(query) ||
-      note.content.toLowerCase().includes(query)
+  const filteredNotes = folders[currentFolder].filter((note) =>
+    note.title.toLowerCase().includes(query)
   );
-  displayFilteredNotes(notes);
+  displayFilteredNotes(filteredNotes);
 }
 
+// Display filtered notes based on search query
 function displayFilteredNotes(filteredNotes) {
   const notesContainer = document.getElementById("notesContainer");
   notesContainer.innerHTML = "";
@@ -213,51 +210,58 @@ function displayFilteredNotes(filteredNotes) {
   filteredNotes.forEach((note) => {
     const noteElement = document.createElement("div");
     noteElement.classList.add("note");
-    if (note.saved) {
-      noteElement.classList.add("saved");
-    }
 
     noteElement.innerHTML = `
-      <input type="text" class="note-title" value="${
-        note.title
-      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${
-        note.id
-      }" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="save-btn" onclick="togglesave(${note.id})">${
-      note.saved ? "Not Save" : "Save"
-    }</button>
+      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
       <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
     `;
     notesContainer.appendChild(noteElement);
   });
 }
 
-function formatText(command) {
-  document.execCommand(command, false, null);
-}
+// Display notes in the current folder
+function displayNotes() {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
 
-function changeFontFamily(event) {
-  const fontFamily = event.target.value;
-  document.execCommand("fontName", false, fontFamily);
-}
+  const notes = folders[currentFolder];
+  notes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
 
-function changeFontSize(event) {
-  const fontSize = event.target.value;
-  document.execCommand("styleWithCSS", true, null);
-  document.execCommand("fontSize", false, "7");
-  document.querySelectorAll("font[size='7']").forEach((font) => {
-    font.style.fontSize = fontSize;
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+    `;
+    notesContainer.appendChild(noteElement);
   });
 }
 
-function changeTextColor(event) {
-  const color = event.target.value;
-  document.execCommand("foreColor", false, color);
+/** -------- Formatting Functions -------- **/
+// Formatting functions for toolbar
+function formatText(style) {
+  document.execCommand(style, false, null);
 }
 
-/** -------- Initialization -------- **/
+function changeFontFamily(event) {
+  document.execCommand("fontName", false, event.target.value);
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  initializeDB();
-});
+function changeFontSize(event) {
+  document.execCommand("fontSize", false, event.target.value);
+}
+
+function changeTextColor(event) {
+  document.execCommand("foreColor", false, event.target.value);
+}
+
+// Event listener to toggle folder list
+document.getElementById("folder").addEventListener("click", toggleFolderList);
+
+// Initialize
+displayFolders();
+displayNotes();
