@@ -27,7 +27,7 @@
         </div>
         <h3>Folders</h3>
         <div class="save-data">
-          <button id="home"><i class="fa-solid fa-house"></i> Home</button>
+          <button id="home" onclick="goToHome()"><i class="fa-solid fa-house"></i> Home</button>
           <button id="folder"><i class="fa-regular fa-note-sticky"></i> Folder</button>
         </div>
         <div id="folderListDropdown" class="folder-list-dropdown" style="display: none;">
@@ -35,7 +35,11 @@
         </div>
         <input type="text" id="newFolderName" placeholder="New Folder Name" />
         <button onclick="addFolder()">Create Folder</button>
+        <div id="trashContainer">
+          <button id="trash" onclick="viewTrash()"><i class="fa-solid fa-trash"></i> Trash</button>
+        </div>
       </div>
+      
       <div class="notes-section">
         <div class="toolbar">
           <button id="createNoteBtn" onclick="addNote()">Create Note</button>
@@ -64,8 +68,15 @@
         </div>
         <div id="notesContainer" class="notes-container"></div>
       </div>
-
     </div>
-  </div>
-</body>
+
+    <!-- Trash View -->
+    <div id="trashView" class="trash-view" style="display: none;">
+      <h3>Deleted Folders</h3>
+      <div id="trashList" class="trash-list"></div>
+      <div class="trash-actions">
+        <button onclick="closeTrash()" class="close-trash-btn">Close</button>
+      </div>
+    </div>
+  </body>
 </html>
