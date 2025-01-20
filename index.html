@@ -27,19 +27,29 @@
         </div>
         <h3>Folders</h3>
         <div class="save-data">
-          <button id="home" onclick="goToHome()"><i class="fa-solid fa-house"></i> Home</button>
-          <button id="folder"><i class="fa-regular fa-note-sticky"></i> Folder</button>
+          <button id="home" onclick="goToHome()">
+            <i class="fa-solid fa-house"></i> Home
+          </button>
+          <button id="folder">
+            <i class="fa-regular fa-note-sticky"></i> Folder
+          </button>
         </div>
-        <div id="folderListDropdown" class="folder-list-dropdown" style="display: none;">
+        <div
+          id="folderListDropdown"
+          class="folder-list-dropdown"
+          style="display: none"
+        >
           <ul id="foldersList" class="folders-list"></ul>
         </div>
         <input type="text" id="newFolderName" placeholder="New Folder Name" />
         <button onclick="addFolder()">Create Folder</button>
         <div id="trashContainer">
-          <button id="trash" onclick="viewTrash()"><i class="fa-solid fa-trash"></i> Trash</button>
+          <button id="trash" onclick="viewTrash()">
+            <i class="fa-solid fa-trash"></i> Trash
+          </button>
         </div>
       </div>
-      
+
       <div class="notes-section">
         <div class="toolbar">
           <button id="createNoteBtn" onclick="addNote()">Create Note</button>
@@ -69,9 +79,9 @@
         <div id="notesContainer" class="notes-container"></div>
       </div>
     </div>
-
+    
     <!-- Trash View -->
-    <div id="trashView" class="trash-view" style="display: none;">
+    <div id="trashView" class="trash-view" style="display: none">
       <h3>Deleted Folders</h3>
       <div id="trashList" class="trash-list"></div>
       <div class="trash-actions">
