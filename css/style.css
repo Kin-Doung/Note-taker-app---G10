@@ -157,8 +157,12 @@ button:hover {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: rgb(178, 178, 187);
   cursor: pointer;
+}
+.formatting-tools input[type="color"] {
+  width: 50px;
+  height: 50px;
 }
 
 .formatting-tools button:hover {
@@ -191,6 +195,9 @@ button:hover {
 .note:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+#createNoteBtn{
+  background: #57A0C1;
 }
 
 .note-title {
@@ -484,9 +491,10 @@ button {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  background-color: #57A0C1;
 }
 
-button:hover {
-  background-color: #f1f1f1;
-  border-radius: 4px;
-}
+
+
+
+
