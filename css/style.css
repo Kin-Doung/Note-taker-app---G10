@@ -14,8 +14,6 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-
-
 .logo {
   flex-wrap: wrap;
   display: flex;
@@ -23,7 +21,6 @@ body {
   align-items: center;
   margin-bottom: 15px;
 }
-
 img {
   width: 100px;
   border-radius: 100%;
@@ -36,15 +33,11 @@ img {
   flex-direction: row;
   width: 100%;
 }
-
 .save-data {
   font-size: 20px;
   width: 50px;
 }
-
-
-#folder,
-#home {
+#folder {
   border: none;
   padding: 10px;
   background-color: gray;
@@ -53,8 +46,15 @@ img {
   margin-bottom: 10px;
   text-align: left;
 }
-
-
+#home {
+  padding: 10px;
+  background-color: gray;
+  width: 250px;
+  margin-left: -3px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+/******** Sidebar ********/
 .sidebar {
   width: 20%;
   background-color: #ffffff;
@@ -250,7 +250,6 @@ button:hover {
   background-color: #c0392b;
 }
 
-
 #trash {
   margin-top: 100px;
   margin-left: -10px;
@@ -337,7 +336,7 @@ button:hover {
   background-color: #d32f2f;
 }
 
-
+/******** Responsive Design ********/
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
@@ -494,3 +493,12 @@ button {
   cursor: pointer;
   background-color: #57A0C1;
 }
+
+
+
+
+
+
+
+
+

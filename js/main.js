@@ -2,6 +2,7 @@
 let folders = JSON.parse(localStorage.getItem("folders")) || { Default: [] };
 let deletedFolders = JSON.parse(localStorage.getItem("deletedFolders")) || {};
 let currentFolder = "Default"; // default folder
+let showMore = false; // Track if we're showing more folders
 
 /** -------- Folder Management -------- **/
 // Save folders and deleted folders to localStorage
@@ -10,10 +11,17 @@ function saveFolders() {
     localStorage.setItem("deletedFolders", JSON.stringify(deletedFolders));
 }
 
-// Toggle folder list dropdown
+// Toggle folder list dropdown visibility
 function toggleFolderList() {
-    const folderListDropdown = document.getElementById("folderListDropdown");
-    folderListDropdown.style.display = folderListDropdown.style.display === "block" ? "none" : "block";
+  const folderListDropdown = document.getElementById("folderListDropdown");
+  folderListDropdown.style.display = folderListDropdown.style.display === "block" ? "none" : "block";
+  displayFolders(); // Update the folder display when toggled
+}
+
+// Show More / Show Less logic for folder list
+function toggleMoreFolders() {
+  showMore = !showMore; // Toggle the state
+  displayFolders(); // Update the folder display based on the new state
 }
 
 // Create a new folder
@@ -97,16 +105,20 @@ function closeTrash() {
     document.getElementById("trashView").style.display = "none";
 }
 
-// Display folders in the sidebar
+// Display folders in the sidebar with Show More functionality
 function displayFolders() {
-    const foldersList = document.getElementById("foldersList");
-    foldersList.innerHTML = "";
+  const foldersList = document.getElementById("foldersList");
+  foldersList.innerHTML = ""; // Clear previous list
 
-    Object.keys(folders).forEach((folderName) => {
-        const folderItem = document.createElement("li");
-        folderItem.textContent = folderName;
-        folderItem.onclick = () => selectFolder(folderName);
-        folderItem.classList.toggle("active", folderName === currentFolder);
+  const folderNames = Object.keys(folders);
+  const visibleFolders = showMore ? folderNames : folderNames.slice(0, 3); // Show more if toggled
+
+  // Loop through the folders and display them
+  visibleFolders.forEach((folderName) => {
+    const folderItem = document.createElement("li");
+    folderItem.textContent = folderName;
+    folderItem.onclick = () => selectFolder(folderName);
+    folderItem.classList.toggle("active", folderName === currentFolder);
 
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";
@@ -115,9 +127,21 @@ function displayFolders() {
             deleteFolder(folderName);
         };
 
-        folderItem.appendChild(deleteBtn);
-        foldersList.appendChild(folderItem);
-    });
+    folderItem.appendChild(deleteBtn);
+    foldersList.appendChild(folderItem);
+  });
+
+  // Show "Show More" or "Show Less" based on state
+  const showMoreButton = document.getElementById("showMoreButton");
+  if (!showMoreButton) {
+    const newShowMoreButton = document.createElement("button");
+    newShowMoreButton.id = "showMoreButton";
+    newShowMoreButton.textContent = showMore ? "Show Less" : "Show More";
+    newShowMoreButton.onclick = toggleMoreFolders;
+    foldersList.appendChild(newShowMoreButton);
+  } else {
+    showMoreButton.textContent = showMore ? "Show Less" : "Show More";
+  }
 }
 
 /** -------- Note Management -------- **/
@@ -339,78 +363,109 @@ function displayNotes() {
     });
 }
 
+// Display folders in the sidebar
+function displayFolders() {
+  const foldersList = document.getElementById("foldersList");
+  foldersList.innerHTML = "";
 
+  Object.keys(folders).forEach((folderName) => {
+    const folderItem = document.createElement("li");
+    folderItem.textContent = folderName;
+    folderItem.onclick = () => selectFolder(folderName);
+    folderItem.classList.toggle("active", folderName === currentFolder);
 
-// Open Modal
-function openModal(id) {
-    document.getElementById(id).classList.add('active');
+    // Rename button
+    const renameBtn = document.createElement("button");
+    renameBtn.textContent = "Rename";
+    renameBtn.onclick = (e) => {
+      e.stopPropagation();
+      renameFolder(folderName);
+    };
+
+    // Delete button
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      deleteFolder(folderName);
+    };
+
+    folderItem.appendChild(renameBtn);
+    folderItem.appendChild(deleteBtn);
+    foldersList.appendChild(folderItem);
+  });
 }
 
-// Close Modal
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
+// Rename a folder with SweetAlert2
+function renameFolder(oldName) {
+  if (oldName === "Default") {
+    Swal.fire("Error", "You cannot rename the Default folder.", "error");
+    return;
+  }
+
+  Swal.fire({
+    title: "Enter new folder name",
+    input: "text",
+    inputValue: oldName,
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value || value.trim() === "") {
+        return "Please enter a valid folder name.";
+      }
+      if (folders[value]) {
+        return "Folder name already exists!";
+      }
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const newName = result.value.trim();
+      // Rename folder
+      folders[newName] = folders[oldName];
+      delete folders[oldName];
+
+      // Update current folder if it is being renamed
+      if (currentFolder === oldName) {
+        currentFolder = newName;
+      }
+
+      saveFolders();
+      displayFolders();
+      displayNotes();
+
+      Swal.fire("Success", `Folder renamed to ${newName}`, "success");
+    }
+  });
 }
 
-// Helper function: Save user to localStorage
-function saveUser(email, userData) {
-    localStorage.setItem(email, JSON.stringify(userData));
+// Delete a folder with SweetAlert2
+function deleteFolder(folderName) {
+  if (folderName === "Default") {
+    Swal.fire("Error", "You cannot delete the Default folder.", "error");
+    return;
+  }
+
+  Swal.fire({
+    title: `Are you sure you want to delete the folder "${folderName}"?`,
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it",
+    cancelButtonText: "No, cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deletedFolders[folderName] = folders[folderName]; // Move to trash
+      delete folders[folderName]; // Delete the folder
+      saveFolders();
+      displayFolders();
+      if (folderName === currentFolder) {
+        currentFolder = "Default";
+        displayNotes();
+      }
+      Swal.fire("Deleted", `Folder "${folderName}" has been moved to trash.`, "success");
+    }
+  });
 }
 
-// Helper function: Retrieve user from localStorage
-function getUser(email) {
-    return JSON.parse(localStorage.getItem(email));
-}
-
-// Register User
-function registerUser() {
-    const firstName = document.getElementById('register-firstname').value.trim();
-    const lastName = document.getElementById('register-lastname').value.trim();
-    const email = document.getElementById('register-email').value.trim();
-    const password = document.getElementById('register-password').value;
-
-    if (!firstName || !lastName || !email || !password) {
-        Swal.fire('Error', 'Please fill in all fields', 'error');
-        return;
-    }
 
 
-    if (password.length < 6) {
-        Swal.fire('Error', 'Password must be at least 6 characters long', 'error');
-        return;
-    }
 
-    const existingUser = getUser(email);
-    if (existingUser) {
-        Swal.fire('Error', 'User already exists. Please log in.', 'error');
-        return;
-    }
-
-    // Save user details to localStorage
-    saveUser(email, { firstName, lastName, email, password });
-    Swal.fire('Account created', 'You can now log in!', 'success');
-    closeModal('registerModal');
-}
-
-// Login User
-function loginUser() {
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
-
-    if (!email || !password) {
-        Swal.fire('Error', 'Please fill in all fields', 'error');
-        return;
-    }
-
-    const storedUser = getUser(email); // Retrieve user from localStorage
-    if (!storedUser) {
-        Swal.fire('Error', 'User not found. Please register first.', 'error');
-        return;
-    }
-
-    if (storedUser.password === password) {
-        Swal.fire('Logged in', `Welcome back, ${storedUser.firstName}!`, 'success');
-        closeModal('loginModal');
-    } else {
-        Swal.fire('Error', 'Incorrect password. Please try again.', 'error');
-    }
-}
