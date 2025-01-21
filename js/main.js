@@ -2,6 +2,7 @@
 let folders = JSON.parse(localStorage.getItem("folders")) || { Default: [] };
 let deletedFolders = JSON.parse(localStorage.getItem("deletedFolders")) || {}; 
 let currentFolder = "Default"; // default folder
+let showMore = false; // Track if we're showing more folders
 
 /** -------- Folder Management -------- **/
 // Save folders and deleted folders to localStorage
@@ -10,10 +11,17 @@ function saveFolders() {
   localStorage.setItem("deletedFolders", JSON.stringify(deletedFolders));
 }
 
-// Toggle folder list dropdown
+// Toggle folder list dropdown visibility
 function toggleFolderList() {
   const folderListDropdown = document.getElementById("folderListDropdown");
   folderListDropdown.style.display = folderListDropdown.style.display === "block" ? "none" : "block";
+  displayFolders(); // Update the folder display when toggled
+}
+
+// Show More / Show Less logic for folder list
+function toggleMoreFolders() {
+  showMore = !showMore; // Toggle the state
+  displayFolders(); // Update the folder display based on the new state
 }
 
 // Create a new folder
@@ -93,7 +101,7 @@ function closeTrash() {
   document.getElementById("trashView").style.display = "none";
 }
 
-// Display folders in the sidebar
+// Display folders in the sidebar with Show More functionality
 function displayFolders() {
     const foldersList = document.getElementById("foldersList");
     foldersList.innerHTML = "";
@@ -103,6 +111,18 @@ function displayFolders() {
         folderItem.textContent = folderName;
         folderItem.onclick = () => selectFolder(folderName);
         folderItem.classList.toggle("active", folderName === currentFolder);
+  const foldersList = document.getElementById("foldersList");
+  foldersList.innerHTML = ""; // Clear previous list
+
+  const folderNames = Object.keys(folders);
+  const visibleFolders = showMore ? folderNames : folderNames.slice(0, 3); // Show more if toggled
+
+  // Loop through the folders and display them
+  visibleFolders.forEach((folderName) => {
+    const folderItem = document.createElement("li");
+    folderItem.textContent = folderName;
+    folderItem.onclick = () => selectFolder(folderName);
+    folderItem.classList.toggle("active", folderName === currentFolder);
 
         // Add delete button for each folder
         const deleteBtn = document.createElement("button");
@@ -115,6 +135,21 @@ function displayFolders() {
 
         foldersList.appendChild(folderItem);
     });
+    folderItem.appendChild(deleteBtn);
+    foldersList.appendChild(folderItem);
+  });
+
+  // Show "Show More" or "Show Less" based on state
+  const showMoreButton = document.getElementById("showMoreButton");
+  if (!showMoreButton) {
+    const newShowMoreButton = document.createElement("button");
+    newShowMoreButton.id = "showMoreButton";
+    newShowMoreButton.textContent = showMore ? "Show Less" : "Show More";
+    newShowMoreButton.onclick = toggleMoreFolders;
+    foldersList.appendChild(newShowMoreButton);
+  } else {
+    showMoreButton.textContent = showMore ? "Show Less" : "Show More";
+  }
 }
 
 /** -------- Note Management -------- **/
