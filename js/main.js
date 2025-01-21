@@ -265,3 +265,173 @@ document.getElementById("folder").addEventListener("click", toggleFolderList);
 // Initialize
 displayFolders();
 displayNotes();
+
+
+// Permanently delete a folder from the trash
+function deleteFolderPermanently(folderName) {
+  if (deletedFolders[folderName]) {
+    delete deletedFolders[folderName]; // Remove from trash
+    saveFolders(); // Save changes to localStorage
+    viewTrash(); // Refresh trash view
+  }
+}
+
+// Restore all deleted folders
+function restoreAllFolders() {
+  Object.keys(deletedFolders).forEach((folderName) => {
+    folders[folderName] = deletedFolders[folderName]; // Move back to folders
+  });
+  deletedFolders = {}; // Clear trash
+  saveFolders(); // Save changes to localStorage
+  displayFolders(); // Refresh folder list
+  displayNotes(); // Refresh notes in the current folder
+  closeTrash(); // Close trash view
+}
+
+// View trash (show deleted folders) with additional actions
+function viewTrash() {
+  const trashView = document.getElementById("trashView");
+  const trashList = document.getElementById("trashList");
+  trashList.innerHTML = ""; // Clear previous content
+
+  // Display deleted folders
+  Object.keys(deletedFolders).forEach((folderName) => {
+    const folderItem = document.createElement("div");
+    folderItem.classList.add("trash-folder");
+    
+    folderItem.innerHTML = `
+      <span>${folderName}</span>
+      <button onclick="restoreFolder('${folderName}')">Restore</button>
+      <button onclick="deleteFolderPermanently('${folderName}')">Delete Permanently</button>
+    `;
+    trashList.appendChild(folderItem);
+  });
+
+  // Add "Restore All" button if there are folders in trash
+  if (Object.keys(deletedFolders).length > 0) {
+    const restoreAllBtn = document.createElement("button");
+    restoreAllBtn.textContent = "Restore All";
+    restoreAllBtn.onclick = restoreAllFolders;
+    trashList.appendChild(restoreAllBtn);
+  }
+
+  // Display trash view
+  trashView.style.display = "block";
+}
+// Save note as PDF
+function saveNoteAsPDF(noteId) {
+  const { jsPDF } = window.jspdf;
+
+  // Find the note by ID
+  const note = folders[currentFolder].find((note) => note.id === noteId);
+  if (!note) return;
+
+  // Create a new PDF document
+  const doc = new jsPDF();
+
+  // Set title and content for the PDF
+  doc.setFontSize(18);
+  doc.text(note.title || 'Untitled', 10, 10); // Title
+
+  doc.setFontSize(12);
+  doc.text(note.content || 'No content available', 10, 20); // Content
+
+  // Save the PDF with the note title as filename
+  doc.save(note.title ? `${note.title}.pdf` : 'note.pdf');
+}
+
+// Display notes in the current folder
+function displayNotes() {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
+
+  const notes = folders[currentFolder];
+  notes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+      <button class="pdf-btn" onclick="saveNoteAsPDF(${note.id})">Save as PDF</button> <!-- PDF Button -->
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}
+
+
+
+// Open Modal
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+// Close Modal
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// Helper function: Save user to localStorage
+function saveUser(email, userData) {
+  localStorage.setItem(email, JSON.stringify(userData));
+}
+
+// Helper function: Retrieve user from localStorage
+function getUser(email) {
+  return JSON.parse(localStorage.getItem(email));
+}
+
+// Register User
+function registerUser() {
+  const firstName = document.getElementById('register-firstname').value.trim();
+  const lastName = document.getElementById('register-lastname').value.trim();
+  const email = document.getElementById('register-email').value.trim();
+  const password = document.getElementById('register-password').value;
+
+  if (!firstName || !lastName || !email || !password) {
+      Swal.fire('Error', 'Please fill in all fields', 'error');
+      return;
+  }
+
+  if (password.length < 6) {
+      Swal.fire('Error', 'Password must be at least 6 characters long', 'error');
+      return;
+  }
+
+  const existingUser = getUser(email);
+  if (existingUser) {
+      Swal.fire('Error', 'User already exists. Please log in.', 'error');
+      return;
+  }
+
+  // Save user details to localStorage
+  saveUser(email, { firstName, lastName, email, password });
+  Swal.fire('Account created', 'You can now log in!', 'success');
+  closeModal('registerModal');
+}
+
+// Login User
+function loginUser() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  if (!email || !password) {
+      Swal.fire('Error', 'Please fill in all fields', 'error');
+      return;
+  }
+
+  const storedUser = getUser(email); // Retrieve user from localStorage
+  if (!storedUser) {
+      Swal.fire('Error', 'User not found. Please register first.', 'error');
+      return;
+  }
+
+  if (storedUser.password === password) {
+      Swal.fire('Logged in', `Welcome back, ${storedUser.firstName}!`, 'success');
+      closeModal('loginModal');
+  } else {
+      Swal.fire('Error', 'Incorrect password. Please try again.', 'error');
+  }
+}
