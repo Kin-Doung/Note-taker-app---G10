@@ -126,7 +126,6 @@ function displayFolders() {
       e.stopPropagation();
       deleteFolder(folderName);
     };
-
     folderItem.appendChild(deleteBtn);
     foldersList.appendChild(folderItem);
   });
