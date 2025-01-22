@@ -1,120 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Note Taker with Folders</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="js/main.js" defer></script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="sidebar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration and Login</title>
+    <link rel="stylesheet" href="/cssform/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/css/form.css">
+    <script src="js/form.js" defer></script>
+</head>
+<body>
 
+    <header class="header">
         <div class="logo">
-          <div class="note-logo">
-            <img src="images/noteLogo.jpg" alt="" />
-            <h3>Note App</h3>
-          </div>
+            <img src="/images/noteLogo.jpg" alt="Website Logo"​​​ class="note-logo">
+            <h3>Note Taker</h3>
         </div>
+        <div class="open-buttons-container">
+            <button class="open-modal" onclick="openModal('registerModal')">Sign In</button>
+            <button class="open-modal" onclick="openModal('loginModal')">Sign Up</button>
+        </div>
+    </header>
 
-        <div class="save-data">
-          <button id="home" onclick="goToHome()">
-            <i class="fa-solid fa-house"></i> Home
-          </button>
-          <button id="folder">
-            <i class="fa-regular fa-note-sticky"></i> Folder
-          </button>
-        </div>
-
-        <div id="folderListDropdown" class="folder-list-dropdown" style="display: none">
-          <ul id="foldersList" class="folders-list"></ul>
-        </div>
-
-        <div class="input-wrapper">
-          <input type="text" id="newFolderName" placeholder="New Folder Name" />
-          <button class="folder-create" onclick="addFolder()">Create Folder</button>
-        </div>
-
-        <div id="trashContainer">
-          <button id="trash" onclick="viewTrash()">
-            <i class="fa-solid fa-trash"></i> Trash
-          </button>
-        </div>
-
-        <div id="trashView" class="trash-view" style="display: none">
-          <h3>Deleted Folders</h3>
-          <div id="trashList" class="trash-list"></div>
-          <div class="trash-actions">
-            <button onclick="closeTrash()" class="close-trash-btn">Close</button>
-          </div>
-        </div>
-      </div>
-      <div class="noteTakerApp">
-        <div class="notes-section"> 
-          <div class="toolbar">
-            <button id="createNoteBtn" onclick="addNote()">Create Note</button>
-            <div class="search-container">
-              <div class="search-input-wrapper">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input
-                  type="text"
-                  id="searchBar"
-                  placeholder="Search Notes"
-                  onkeyup="searchNotes()"
-                />
-              </div>
-            </div>
-            <div class="formatting-tools">
-              <button onclick="formatText('bold')">Bold</button>
-              <button onclick="formatText('italic')">Italic</button>
-              <button onclick="formatText('underline')">Underline</button>
-              <select onchange="changeFontFamily(event)">
-                <option value="Arial">Arial</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Verdana">Verdana</option>
-                <option value="Tahoma">Tahoma</option>
-                <option value="Comic Sans MS">Comic Sans MS</option>
-                <option value="Trebuchet MS">Trebuchet MS</option>
-                <option value="Impact">Impact</option>
-                <option value="Lucida Console">Lucida Console</option>
-                <option value="Palatino">Palatino</option>
-                <option value="Garamond">Garamond</option>
-                <option value="Frank Ruhl Libre">Frank Ruhl Libre</option>
-              </select>
-              <select onchange="changeFontSize(event)">
-                <option value="12px">12px</option>
-                <option value="14px">14px</option>
-                <option value="16px">16px</option>
-                <option value="18px">18px</option>
-                <option value="20px">20px</option>
-                <option value="24px">24px</option>
-                <option value="28px">28px</option>
-                <option value="32px">32px</option>
-                <option value="36px">36px</option>
-                <option value="40px">40px</option>
-                <option value="48px">48px</option>
-                <option value="56px">56px</option>
-                <option value="64px">64px</option>
-              </select>
-              <input type="color" onchange="changeTextColor(event)" placeholder="change color"/>
-            </div>
-          </div>
-          <div id="notesContainer" class="notes-container"></div>
-        </div>
-      </div>
+    <div class="main-container">
+        <img src="images/notebook.jpg" alt="Hero Image" class="note-image">
     </div>
-  </body>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h2>Register</h2>
+            <div class="fir-last">
+                <input id="register-firstname" type="text" placeholder="First Name">
+                <input id="register-lastname" type="text" placeholder="Last Name">
+            </div>
+            <input id="register-email" type="email" placeholder="Email">
+            <input id="register-password" type="password" placeholder="Password">
+            <div class="reg-can">
+                <button class="reg-btn" onclick="registerUser()">Register</button>
+                <button class="reg-btn" onclick="closeModal('registerModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <input id="login-email" type="email" placeholder="Email">
+            <input id="login-password" type="password" placeholder="Password">
+            <div class="reg-can">
+                <button class = "reg-btn" onclick="loginUser()">Login</button>
+                <button class = "reg-btn" onclick="closeModal('loginModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
