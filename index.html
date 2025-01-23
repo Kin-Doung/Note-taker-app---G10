@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,33 +10,46 @@
     <script src="js/form.js" defer></script>
 </head>
 <body>
-    <!-- Buttons Container for Register & Login -->
-    <div class="open-buttons-container">
-        <button class="open-modal" onclick="openModal('registerModal')">Create acound</button>
-        <button class="open-modal" onclick="openModal('loginModal')">Login</button>
+
+    <header class="header">
+        <div class="logo">
+            <img src="/images/noteLogo.jpg" alt="Website Logo"​​​ class="note-logo">
+            <h3>Note Taker</h3>
+        </div>
+        <div class="open-buttons-container">
+            <button class="open-modal" onclick="openModal('registerModal')">Sign In</button>
+            <button class="open-modal" onclick="openModal('loginModal')">Sign Up</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <img src="images/notebook.jpg" alt="Hero Image" class="note-image">
     </div>
-   
-    <!-- Register Modal -->
+
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <h2>Register</h2>
-            <input id="register-firstname" type="text" placeholder="First Name">
-            <input id="register-lastname" type="text" placeholder="Last Name">
+            <div class="fir-last">
+                <input id="register-firstname" type="text" placeholder="First Name">
+                <input id="register-lastname" type="text" placeholder="Last Name">
+            </div>
             <input id="register-email" type="email" placeholder="Email">
             <input id="register-password" type="password" placeholder="Password">
-            <button onclick="registerUser()">Register</button>
-            <button onclick="closeModal('registerModal')">Cancel</button>
+            <div class="reg-can">
+                <button class="reg-btn" onclick="registerUser()">Register</button>
+                <button class="reg-btn" onclick="closeModal('registerModal')">Cancel</button>
+            </div>
         </div>
     </div>
-
-    <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <h2>Login</h2>
             <input id="login-email" type="email" placeholder="Email">
             <input id="login-password" type="password" placeholder="Password">
-            <button onclick="loginUser()">Login</button>
-            <button onclick="closeModal('loginModal')">Cancel</button>
+            <div class="reg-can">
+                <button class = "reg-btn" onclick="loginUser()">Login</button>
+                <button class = "reg-btn" onclick="closeModal('loginModal')">Cancel</button>
+            </div>
         </div>
     </div>
 </body>
