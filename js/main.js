@@ -51,7 +51,7 @@ function deleteFolder(folderName) {
     saveFolders();
     displayFolders();
     if (folderName === currentFolder) {
-      currentFolder = "Default";
+      currentFolder = "Default"; 
       displayNotes();
     }
   } else {
@@ -109,7 +109,7 @@ function displayFolders() {
     folderItem.classList.toggle("active", folderName === currentFolder);
 
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
+    deleteBtn.innerHTML.textContent = '<i class="fas fa-trash-alt"></i>';
     deleteBtn.onclick = (e) => {
       e.stopPropagation();
       deleteFolder(folderName);
@@ -117,6 +117,83 @@ function displayFolders() {
 
     folderItem.appendChild(deleteBtn);
     foldersList.appendChild(folderItem);
+  });
+}
+
+
+// Display folders in the sidebar
+function displayFolders() {
+  const foldersList = document.getElementById("foldersList");
+  foldersList.innerHTML = "";
+
+  Object.keys(folders).forEach((folderName) => {
+    const folderItem = document.createElement("li");
+    folderItem.textContent = folderName;
+    folderItem.onclick = () => selectFolder(folderName);
+    folderItem.classList.toggle("active", folderName === currentFolder);
+
+    // Rename button
+    const renameBtn = document.createElement("button");
+    renameBtn.classList.add('rename')
+    renameBtn.textContent = "Rename";
+    renameBtn.onclick = (e) => {
+      e.stopPropagation();
+      renameFolder(folderName);
+    };
+
+    // Delete button
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add('delete')
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      deleteFolder(folderName);
+    };
+
+    folderItem.appendChild(renameBtn);
+    folderItem.appendChild(deleteBtn);
+    foldersList.appendChild(folderItem);
+  });
+}
+
+// Rename a folder with SweetAlert2
+function renameFolder(oldName) {
+  if (oldName === "Default") {
+    Swal.fire("Error", "You cannot rename the Default folder.", "error");
+    return;
+  }
+
+  Swal.fire({
+    title: "Enter new folder name",
+    input: "text",
+    inputValue: oldName,
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value || value.trim() === "") {
+        return "Please enter a valid folder name.";
+      }
+      if (folders[value]) {
+        return "Folder name already exists!";
+      }
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const newName = result.value.trim();
+      // Rename folder
+      folders[newName] = folders[oldName];
+      delete folders[oldName];
+
+      // Update current folder if it is being renamed
+      if (currentFolder === oldName) {
+        currentFolder = newName;
+      }
+
+      saveFolders();
+      displayFolders();
+      displayNotes();
+
+      Swal.fire("Success", `Folder renamed to ${newName}`, "success");
+    }
   });
 }
 
@@ -196,6 +273,7 @@ function displayFilteredNotes(filteredNotes) {
     notesContainer.appendChild(noteElement);
   });
 }
+
 
 // Display notes in the current folder
 function displayNotes() {
@@ -294,122 +372,7 @@ function viewTrash() {
   // Display trash view
   trashView.style.display = "block";
 }
-// Save note as PDF
-function saveNoteAsPDF(noteId) {
-  const { jsPDF } = window.jspdf;
 
-  // Find the note by ID
-  const note = folders[currentFolder].find((note) => note.id === noteId);
-  if (!note) return;
-
-  // Create a new PDF document
-  const doc = new jsPDF();
-
-  // Set title and content for the PDF
-  doc.setFontSize(18);
-  doc.text(note.title || 'Untitled', 10, 10); // Title
-
-  doc.setFontSize(12);
-  doc.text(note.content || 'No content available', 10, 20); // Content
-
-  // Save the PDF with the note title as filename
-  doc.save(note.title ? `${note.title}.pdf` : 'note.pdf');
-}
-
-// Display notes in the current folder
-function displayNotes() {
-  const notesContainer = document.getElementById("notesContainer");
-  notesContainer.innerHTML = "";
-
-  const notes = folders[currentFolder];
-  notes.forEach((note) => {
-    const noteElement = document.createElement("div");
-    noteElement.classList.add("note");
-
-    noteElement.innerHTML = `
-      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
-      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
-      <button class="pdf-btn" onclick="saveNoteAsPDF(${note.id})">Save as PDF</button> <!-- PDF Button -->
-    `;
-    notesContainer.appendChild(noteElement);
-  });
-}
-
-// Display folders in the sidebar
-function displayFolders() {
-  const foldersList = document.getElementById("foldersList");
-  foldersList.innerHTML = "";
-
-  Object.keys(folders).forEach((folderName) => {
-    const folderItem = document.createElement("li");
-    folderItem.textContent = folderName;
-    folderItem.onclick = () => selectFolder(folderName);
-    folderItem.classList.toggle("active", folderName === currentFolder);
-
-    // Rename button
-    const renameBtn = document.createElement("button");
-    renameBtn.textContent = "Rename";
-    renameBtn.onclick = (e) => {
-      e.stopPropagation();
-      renameFolder(folderName);
-    };
-
-    // Delete button
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.onclick = (e) => {
-      e.stopPropagation();
-      deleteFolder(folderName);
-    };
-
-    folderItem.appendChild(renameBtn);
-    folderItem.appendChild(deleteBtn);
-    foldersList.appendChild(folderItem);
-  });
-}
-
-// Rename a folder with SweetAlert2
-function renameFolder(oldName) {
-  if (oldName === "Default") {
-    Swal.fire("Error", "You cannot rename the Default folder.", "error");
-    return;
-  }
-
-  Swal.fire({
-    title: "Enter new folder name",
-    input: "text",
-    inputValue: oldName,
-    showCancelButton: true,
-    inputValidator: (value) => {
-      if (!value || value.trim() === "") {
-        return "Please enter a valid folder name.";
-      }
-      if (folders[value]) {
-        return "Folder name already exists!";
-      }
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const newName = result.value.trim();
-      // Rename folder
-      folders[newName] = folders[oldName];
-      delete folders[oldName];
-
-      // Update current folder if it is being renamed
-      if (currentFolder === oldName) {
-        currentFolder = newName;
-      }
-
-      saveFolders();
-      displayFolders();
-      displayNotes();
-
-      Swal.fire("Success", `Folder renamed to ${newName}`, "success");
-    }
-  });
-}
 
 // Delete a folder with SweetAlert2
 function deleteFolder(folderName) {
@@ -440,6 +403,219 @@ function deleteFolder(folderName) {
   });
 }
 
+/** -------- Pinned Notes Management -------- **/
+
+// View all pinned notes across folders
+function viewPinnedNotes() {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
+
+  const pinnedNotes = [];
+  Object.keys(folders).forEach((folderName) => {
+    folders[folderName].forEach((note) => {
+      if (note.pinned) {
+        pinnedNotes.push({ ...note, folderName }); // Include folderName for reference
+      }
+    });
+  });
+
+  if (pinnedNotes.length === 0) {
+    notesContainer.innerHTML = "<p>No pinned notes available.</p>";
+    return;
+  }
+
+  pinnedNotes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+
+    noteElement.innerHTML = `
+      <div class="note-meta">
+        <span class="note-folder">(Folder: ${note.folderName})</span>
+      </div>
+      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
+      <button class="delete-btn" onclick="removeNoteFromPinned(${note.id}, '${note.folderName}')">Delete</button>
+      <button class="pdf-btn" onclick="saveNoteAsPDF(${note.id})">Save as PDF</button>
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}
+
+// Remove note from pinned view (delete from folder)
+function removeNoteFromPinned(noteId, folderName) {
+  folders[folderName] = folders[folderName].filter((note) => note.id !== noteId);
+  saveFolders();
+  viewPinnedNotes();
+}
+
+/** -------- Updated Pin Toggle -------- **/
+
+function togglePin(id) {
+  let noteFound = false;
+
+  // Find the note in the current folder or across all folders
+  Object.keys(folders).forEach((folderName) => {
+    folders[folderName].forEach((note) => {
+      if (note.id === id) {
+        note.pinned = !note.pinned;
+        noteFound = true;
+      }
+    });
+  });
+
+  if (noteFound) {
+    saveFolders();
+    displayNotes();
+  } else {
+    console.error("Note not found:", id);
+  }
+}
 
 
+// Save folders and deleted folders to localStorage (with styles)
+function saveFolders() {
+  localStorage.setItem("folders", JSON.stringify(folders));
+  localStorage.setItem("deletedFolders", JSON.stringify(deletedFolders));
+  console.log("Folders and deleted folders saved to localStorage.");
+}
 
+// Add a new note with style data (font color, size, etc.)
+function addNote() {
+  const newNote = {
+    id: Date.now(),
+    title: "",
+    content: "",
+    pinned: false,
+    fontColor: "#000000",  // Default color (black)
+    fontSize: "16px",      // Default font size
+    fontFamily: "Arial",   // Default font family
+    bold: false,           // Default bold
+    italic: false,         // Default italic
+    underline: false       // Default underline
+  };
+  folders[currentFolder].push(newNote);
+  saveFolders(); // Save data after adding note
+  displayNotes();
+}
+
+// Edit note content and styles
+function editNoteContent(id) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  if (note) {
+    const noteElement = document.getElementById(`note-${id}`);
+    note.content = noteElement.innerHTML;  // Save the content
+
+    // Save the note's styles
+    note.fontColor = noteElement.style.color || "#000000";
+    note.fontSize = noteElement.style.fontSize || "16px";
+    note.fontFamily = noteElement.style.fontFamily || "Arial";
+    note.bold = noteElement.style.fontWeight === "bold";
+    note.italic = noteElement.style.fontStyle === "italic";
+    note.underline = noteElement.style.textDecoration === "underline";
+
+    saveFolders(); // Save data after editing content or styles
+  } else {
+    console.error("Note not found:", id);
+  }
+}
+
+// Function to apply styles when rendering the notes
+function displayNotes() {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
+
+  const notes = folders[currentFolder];
+  notes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+
+    // Apply stored styles to the note
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" style="color: ${note.fontColor}; font-size: ${note.fontSize}; font-family: ${note.fontFamily}; text-decoration: ${note.underline ? "underline" : "none"}; font-weight: ${note.bold ? "bold" : "normal"}; font-style: ${note.italic ? "italic" : "normal"}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+      <button class="style-btn" onclick="editNoteStyles(${note.id})">Edit Styles</button>
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}
+
+// Edit note styles (color, size, font, etc.)
+function editNoteStyles(id) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  if (note) {
+    // Example: Open a simple prompt or a modal for style editing
+    const newColor = prompt("Enter Font Color (e.g. #ff0000 for red)", note.fontColor);
+    const newSize = prompt("Enter Font Size (e.g. 18px)", note.fontSize);
+    const newFont = prompt("Enter Font Family (e.g. Arial)", note.fontFamily);
+
+    // Update the note's styles
+    note.fontColor = newColor;
+    note.fontSize = newSize;
+    note.fontFamily = newFont;
+
+    // Optionally, handle bold, italic, underline toggles
+    note.bold = confirm("Bold?");
+    note.italic = confirm("Italic?");
+    note.underline = confirm("Underline?");
+
+    saveFolders(); // Save data after style change
+    displayNotes(); // Re-render notes with updated styles
+  } else {
+    console.error("Note not found:", id);
+  }
+}
+
+
+// Save note as a PDF
+function saveNoteAsPDF(id) {
+  const note = folders[currentFolder].find((note) => note.id === id);
+  if (note) {
+    const { jsPDF } = window.jspdf; // Access jsPDF from the global window object
+    const pdf = new jsPDF();
+
+    // Extract title and plain text content
+    const title = note.title || "Untitled Note";
+    const content = note.content.replace(/<\/?[^>]+(>|$)/g, "") || "No content available."; // Strip HTML tags
+
+    // Add title to PDF
+    pdf.setFontSize(16);
+    pdf.text(title, 10, 10);
+
+    // Add plain text content to PDF
+    pdf.setFontSize(12);
+    const pageWidth = pdf.internal.pageSize.width;
+    const margin = 10;
+    const maxWidth = pageWidth - margin * 2;
+    const contentLines = pdf.splitTextToSize(content, maxWidth);
+    pdf.text(contentLines, margin, 20);
+
+    // Save the PDF file
+    pdf.save(`${title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`);
+  } else {
+    console.error("Note not found:", id);
+  }
+}
+function displayNotes() {
+  const notesContainer = document.getElementById("notesContainer");
+  notesContainer.innerHTML = "";
+
+  const notes = folders[currentFolder];
+  notes.forEach((note) => {
+    const noteElement = document.createElement("div");
+    noteElement.classList.add("note");
+
+    // Apply stored styles to the note
+    noteElement.innerHTML = `
+      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${note.id}" style="color: ${note.fontColor}; font-size: ${note.fontSize}; font-family: ${note.fontFamily}; text-decoration: ${note.underline ? "underline" : "none"}; font-weight: ${note.bold ? "bold" : "normal"}; font-style: ${note.italic ? "italic" : "normal"}" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
+      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+      <button class="style-btn" onclick="editNoteStyles(${note.id})">Edit Styles</button>
+      <button class="pdf-btn" onclick="saveNoteAsPDF(${note.id})">Save as PDF</button>
+    `;
+    notesContainer.appendChild(noteElement);
+  });
+}

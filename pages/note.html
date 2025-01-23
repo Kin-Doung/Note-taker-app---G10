@@ -18,9 +18,14 @@
       rel="stylesheet"
     />
     <!-- Include jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
     <!-- Link to external JavaScript file -->
     <script src="/js/main.js" defer></script>
   </head>
@@ -29,20 +34,17 @@
       <div class="sidebar">
         <div class="logo">
           <img src="/images/noteLogo.jpg" alt="" />
-          <div>
+          <div id="noteapp">
             <h3>Note Taker App</h3>
-            <p>You can take notes</p>
+            <!-- <p>You can take notes</p> -->
           </div>
         </div>
-        <h3>Folders</h3>
         <div class="save-data">
           <button id="home" onclick="goToHome()">
             <i class="fa-solid fa-house"></i> Home
           </button>
         </div>
-        <button id="folder">
-          <i class="fa-solid fa-folder"></i> Folder
-        </button>
+        <button id="folder"><i class="fa-solid fa-folder"></i> Folder</button>
         <div
           id="folderListDropdown"
           class="folder-list-dropdown"
@@ -50,12 +52,15 @@
         >
           <ul id="foldersList" class="folders-list"></ul>
         </div>
+        <button id="pinnedNotesBtn" onclick="viewPinnedNotes()">
+          <i class="fa-solid fa-thumbtack"></i> Pinned Notes
+        </button>
         <div class="input-wrapper">
           <input type="text" id="newFolderName" placeholder="New Folder Name" />
-          <button onclick="addFolder()">Create Folder</button>
+          <button onclick="addFolder()" id="create-folder">Create Folder</button>
         </div>
         <div id="trashContainer">
-          <button id="trash" onclick="viewTrash()">
+          <button id="trash" onclick="viewTrash()"> 
             <i class="fa-solid fa-trash"></i> Trash
           </button>
         </div>
@@ -65,8 +70,10 @@
         <div class="toolbar">
           <button id="createNoteBtn" onclick="addNote()">Create Note</button>
           <div class="search-container">
+            <img id="profile" src="/images/profile.png" alt="">
+            <img id="ring" src="/images/ring.png" alt="">
             <div class="search-input-wrapper">
-              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-magnifying-glass" id="search"></i>
               <input
                 type="text"
                 id="searchBar"
@@ -99,6 +106,7 @@
         <div id="notesContainer" class="notes-container"></div>
       </div>
     </div>
+    
 
     <!-- Trash View -->
     <div id="trashView" class="trash-view" style="display: none">
