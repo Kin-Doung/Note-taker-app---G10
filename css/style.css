@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: 'Poppins', Arial, sans-serif;
+  font-family: "Poppins", Arial, sans-serif;
   color: #333;
   background-color: #f9f9f9;
   margin: 0;
@@ -17,14 +17,11 @@ body {
 
 /* Logo Section */
 .logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
+  text-align: center;
 }
 
 img {
-  width: 80px;
+  width: 100px;
   border-radius: 100%;
 }
 
@@ -36,7 +33,7 @@ img {
 
 .save-data {
   font-size: 20px;
-  width: 50px;
+  width: 100%;
 }
 
 /* Sidebar Styles */
@@ -47,21 +44,19 @@ img {
   border-right: 1px solid #e0e0e0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
-#home{
+#home {
   text-align: left;
   margin-left: 5px;
   margin-bottom: 10px;
   width: 250px;
   padding: 10px;
 }
-#noteap, h3{
-  margin-top: 10px;
-  width: 100px;
-  font-size: 200px;
+#noteap,
+h3 {
+  font-size: 250px;
   margin-left: 5px;
 }
 .sidebar h3 {
-  
   font-size: 20px;
   margin-bottom: 15px;
   font-weight: 600;
@@ -73,16 +68,16 @@ img {
   padding: 0;
   margin: 0;
 }
-#folder{
+#folder {
   margin-left: 5px;
   padding: 10px;
   width: 93%;
   text-align: left;
 }
-.fa-folder{
+.fa-folder {
   color: gold;
 }
-#pinnedNotesBtn{
+#pinnedNotesBtn {
   margin-left: 5px;
   margin-top: 10px;
   padding: 10px;
@@ -118,7 +113,7 @@ img {
   border-radius: 5px;
   margin-left: 5px;
 }
-#create-folder{
+#create-folder {
   padding: 10px;
   margin-left: 5px;
   width: 50%;
@@ -161,7 +156,6 @@ button:hover {
   margin-top: 80px;
 }
 
-
 .toolbar input {
   width: 70%;
   padding: 10px;
@@ -171,12 +165,14 @@ button:hover {
   margin-right: 15px;
   outline-color: #7993ae;
 }
-#search{
+#search {
   position: absolute;
-  left: 805px;
-  top: 25px;
+  left: 795px;
+  top: 26px;
 }
-
+li {
+  font-size: 12px;
+}
 /* Formatting Tools */
 .formatting-tools button,
 .formatting-tools select,
@@ -237,6 +233,8 @@ button:hover {
 }
 
 .note-content {
+  max-height: 200px; /* Adjust to your desired scrollable height */
+  overflow-y: auto; /* Enables vertical scrolling */
   min-height: 200px;
   padding: 10px;
   font-size: 14px;
@@ -246,9 +244,11 @@ button:hover {
   margin-bottom: 5px;
 }
 
+
 /* Pin & Delete Buttons */
 .pin-btn,
 .delete-btn {
+  margin-left: 0;
   padding: 8px 10px;
   font-size: 12px;
   border-radius: 5px;
@@ -282,22 +282,21 @@ button:hover {
   margin-top: 25px;
   margin-left: 5px;
   width: 245px;
-  background: #888;
+  background: #007bff;
   padding: 10px;
   text-align: left;
 }
-.fa-trash{
+.fa-trash {
   color: #c0392b;
 }
 
-.rename{
-  position: relative;
-  left: 35px;
- 
+.rename {
+  font-size: 10px;
+  margin: 10px;
 }
-.delete{
-  position: relative;
-  left: 20px;
+.delete {
+  font-size: 10px;
+  margin-left: -0.5px;
 }
 
 /* Trash View Styles */
@@ -329,7 +328,7 @@ button:hover {
   padding: 15px;
   margin: 5px 0;
   border-radius: 8px;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .trash-folder:hover {
@@ -341,7 +340,7 @@ button:hover {
 }
 
 .trash-folder button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -353,7 +352,6 @@ button:hover {
 .trash-folder button:hover {
   background-color: #45a049;
 }
-
 
 /* Trash View Actions */
 .trash-actions {
@@ -374,7 +372,6 @@ button:hover {
   background-color: #d32f2f;
 }
 
-
 /* Navbar */
 .navbar {
   background-color: #333;
@@ -390,36 +387,43 @@ button:hover {
   top: 2px;
   color: gray;
 }
+select{
+  color: #ffffff;
+}
 
-.search-container{
-  background: #695454;
-  width: 77%;
+.search-container {
+  background: #007bff;
+  width: 76%;
   position: absolute;
   top: 2px;
   padding: 15px;
   left: 330px;
   border-radius: 5px;
+  z-index: 1;
+}
+.style-btn{
+  margin-left: 0;
 }
 
-#searchBar{
+#searchBar {
   padding-left: 20px;
   margin-left: 20px;
 }
 
-#profile{
+#profile {
   position: absolute;
   width: 50px;
   left: 1100px;
   top: 12px;
 }
-#ring{
+#ring {
   position: absolute;
   width: 40px;
   left: 1050px;
 }
 /* PDF Button */
 .pdf-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -434,43 +438,240 @@ button:hover {
   background-color: #45a049;
 }
 
+/* For Tablets (768px and up) */
+@media (max-width: 1024px) {
+  /* Adjust container layout */
+  .container {
+    flex-direction: column;
+  }
 
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
+  .logo img {
+    width: 100px;
+    position: relative;
+    right: 350px;
+  }
+  /* Sidebar */
   .sidebar {
     width: 100%;
-    height: auto;
+    padding: 15px;
+    box-shadow: none;
     border-right: none;
-    border-bottom: 1px solid #e0e0e0;
   }
 
+  #searchBar {
+    width: 80%;
+    position: absolute;
+    top: 14px;
+    left: 10px;
+    padding: 8px;
+  }
+  #search {
+    top: 25 px;
+    left: 520px;
+    z-index: 1;
+  }
+  #foldersList {
+    max-height: 200px;
+  }
+  .search-container {
+    top: 40px;
+    width: 80%;
+    margin-left: -200px;
+  }
+
+  /* Notes Section */
+  .notes-section {
+    padding: 15px;
+  }
+
+  /* Notes Grid */
   .notes-container {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
   }
 
+  /* Toolbar */
   .toolbar {
     flex-direction: column;
-    align-items: flex-start;
     gap: 10px;
   }
 
   .toolbar input {
     width: 100%;
-    margin-bottom: 10px;
+  }
+
+  /* Buttons */
+  button {
+    margin-left: 0;
+  }
+
+  .delete-btn {
+    margin-left: 0px;
+  }
+  #ring {
+    left: 550px;
+    width: 27px;
+    position: relative;
+  }
+  #profile {
+    top: 3px;
+    left: 550px;
+    width: 30px;
+    position: relative;
+  }
+  #home {
+    width: 98%;
+  }
+  #folder {
+    width: 98%;
+  }
+  #pinnedNotesBtn {
+    width: 98%;
+  }
+  #trash {
+    width: 98%;
+  }
+  .rename {
+    font-size: 8px;
+    margin: 10px;
+  }
+  .delete {
+    font-size: 8px;
   }
 }
 
-@media (max-width: 480px) {
-  .note {
+/* For Mobile Devices (768px and below) */
+@media (max-width: 768px) {
+  /* General */
+  body {
+    flex-direction: column;
+    overflow: auto;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+  }
+
+  #foldersList {
+    max-height: 150px;
+  }
+  .search-container {
+    position: absolute;
+    width: 80%;
+    left: 265px;
+    top: 17px;
+    height: 40px;
+  }
+  .logo {
+    width: 100px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    margin-left: 100px;
+  }
+  h3 {
+    display: none;
+  }
+
+  /* Notes Grid */
+  .notes-container {
+    grid-template-columns: 1fr; /* Single column layout */
+  }
+
+  /* Toolbar */
+  .toolbar {
+    flex-direction: column;
+    padding: 10px;
+  }
+  #search,
+  #profile,
+  #ring {
+    position: absolute;
+    left: 100px;
+  }
+  #search{
+    top: 13px;
+    margin-left: 120px;
+    font-size: 12px;
+  }
+  #searchBar {
+    position: relative;
+    top: -7px;
+    height: 18px;
+    font-size: 10px;
+    left: -20px;
+
+  }
+  #profile {
+    position: absolute;
+    left: 280px;
+    z-index: 1;
+    width: 20px;
+    top: 10px;
+  }
+  #ring {
+    left: 250px;
+    z-index: 1;
+    width: 20px;
+    top: 10px;
+  }
+
+  .toolbar input {
+    width: 100%;
+  }
+
+  .logo,
+  img {
+    top: 0;
+    position: relative;
+    left: -75px;
+    width: 100px;
+  }
+  #logo{
+    width: 50px;
+  }
+  /* Adjust buttons for mobile */
+  button {
+    width: 30%;
+    margin-top: 10px;
+  }
+
+  /* Trash View */
+  .trash-view {
     padding: 15px;
   }
 
-  .note-title,
-  .note-content {
+  .trash-folder span {
     font-size: 14px;
+  }
 
+  .trash-folder button {
+    padding: 5px 8px;
+    font-size: 12px;
   }
 }
 
+/* Extra Small Devices (e.g., small phones) */
+@media (max-width: 480px) {
+  /* Notes Section */
+  .notes-section {
+    padding: 10px;
+  }
+
+  /* Notes Grid */
+  .notes-container {
+    gap: 10px;
+  }
+
+  /* Adjust logo and images */
+  .logo img {
+    width: 80px;
+  }
+
+  /* Trash View */
+  .trash-view h3 {
+    font-size: 18px;
+  }
+}

@@ -619,3 +619,6 @@ function displayNotes() {
     notesContainer.appendChild(noteElement);
   });
 }
+
+
+
