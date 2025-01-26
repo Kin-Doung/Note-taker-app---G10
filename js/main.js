@@ -1,6 +1,6 @@
 // Initialize folders and trash from localStorage
 let folders = JSON.parse(localStorage.getItem("folders")) || { Default: [] };
-let deletedFolders = JSON.parse(localStorage.getItem("deletedFolders")) || {}; 
+let deletedFolders = JSON.parse(localStorage.getItem("deletedFolders")) || {};
 let currentFolder = "Default"; // default folder
 
 /** -------- Folder Management -------- **/
@@ -13,14 +13,15 @@ function saveFolders() {
 // Toggle folder list dropdown
 function toggleFolderList() {
   const folderListDropdown = document.getElementById("folderListDropdown");
-  folderListDropdown.style.display = folderListDropdown.style.display === "block" ? "none" : "block";
+  folderListDropdown.style.display =
+    folderListDropdown.style.display === "block" ? "none" : "block";
 }
 
 // Create a new folder
 function addFolder() {
   const folderName = document.getElementById("newFolderName").value.trim();
   if (folderName && !folders[folderName]) {
-    folders[folderName] = []; 
+    folders[folderName] = [];
     saveFolders();
     displayFolders();
     document.getElementById("newFolderName").value = "";
@@ -51,7 +52,7 @@ function deleteFolder(folderName) {
     saveFolders();
     displayFolders();
     if (folderName === currentFolder) {
-      currentFolder = "Default"; 
+      currentFolder = "Default";
       displayNotes();
     }
   } else {
@@ -66,7 +67,7 @@ function restoreFolder(folderName) {
     delete deletedFolders[folderName]; // Remove from trash
     saveFolders();
     displayFolders();
-    displayNotes(); 
+    displayNotes();
   }
 }
 
@@ -80,7 +81,7 @@ function viewTrash() {
   Object.keys(deletedFolders).forEach((folderName) => {
     const folderItem = document.createElement("div");
     folderItem.classList.add("trash-folder");
-    
+
     folderItem.innerHTML = `
       <span>${folderName}</span>
       <button onclick="restoreFolder('${folderName}')">Restore</button>
@@ -120,7 +121,6 @@ function displayFolders() {
   });
 }
 
-
 // Display folders in the sidebar
 function displayFolders() {
   const foldersList = document.getElementById("foldersList");
@@ -134,7 +134,7 @@ function displayFolders() {
 
     // Rename button
     const renameBtn = document.createElement("button");
-    renameBtn.classList.add('rename')
+    renameBtn.classList.add("rename");
     renameBtn.textContent = "Rename";
     renameBtn.onclick = (e) => {
       e.stopPropagation();
@@ -143,7 +143,7 @@ function displayFolders() {
 
     // Delete button
     const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add('delete')
+    deleteBtn.classList.add("delete");
     deleteBtn.textContent = "Delete";
     deleteBtn.onclick = (e) => {
       e.stopPropagation();
@@ -228,7 +228,9 @@ function editNoteContent(id) {
 
 // Delete a note
 function removeNote(id) {
-  folders[currentFolder] = folders[currentFolder].filter((note) => note.id !== id);
+  folders[currentFolder] = folders[currentFolder].filter(
+    (note) => note.id !== id
+  );
   saveFolders();
   displayNotes();
 }
@@ -265,15 +267,22 @@ function displayFilteredNotes(filteredNotes) {
     noteElement.classList.add("note");
 
     noteElement.innerHTML = `
-      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
-      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${
+        note.id
+      }" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${
+      note.pinned ? "Unpin" : "Pin"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${
+        note.id
+      })">Delete</button>
     `;
     notesContainer.appendChild(noteElement);
   });
 }
-
 
 // Display notes in the current folder
 function displayNotes() {
@@ -286,10 +295,18 @@ function displayNotes() {
     noteElement.classList.add("note");
 
     noteElement.innerHTML = `
-      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
-      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${
+        note.id
+      }" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${
+      note.pinned ? "Unpin" : "Pin"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${
+        note.id
+      })">Delete</button>
     `;
     notesContainer.appendChild(noteElement);
   });
@@ -319,7 +336,6 @@ document.getElementById("folder").addEventListener("click", toggleFolderList);
 // Initialize
 displayFolders();
 displayNotes();
-
 
 // Permanently delete a folder from the trash
 function deleteFolderPermanently(folderName) {
@@ -352,7 +368,7 @@ function viewTrash() {
   Object.keys(deletedFolders).forEach((folderName) => {
     const folderItem = document.createElement("div");
     folderItem.classList.add("trash-folder");
-    
+
     folderItem.innerHTML = `
       <span>${folderName}</span>
       <button onclick="restoreFolder('${folderName}')">Restore</button>
@@ -373,7 +389,6 @@ function viewTrash() {
   trashView.style.display = "block";
 }
 
-
 // Delete a folder with SweetAlert2
 function deleteFolder(folderName) {
   if (folderName === "Default") {
@@ -386,7 +401,7 @@ function deleteFolder(folderName) {
     text: "This action cannot be undone.",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonText: "Yes, delete it",
+    confirmButtonText: "Yes, delete",
     cancelButtonText: "No, cancel",
   }).then((result) => {
     if (result.isConfirmed) {
@@ -398,7 +413,11 @@ function deleteFolder(folderName) {
         currentFolder = "Default";
         displayNotes();
       }
-      Swal.fire("Deleted", `Folder "${folderName}" has been moved to trash.`, "success");
+      Swal.fire(
+        "Deleted",
+        `Folder "${folderName}" has been moved to trash.`,
+        "success"
+      );
     }
   });
 }
@@ -432,11 +451,21 @@ function viewPinnedNotes() {
       <div class="note-meta">
         <span class="note-folder">(Folder: ${note.folderName})</span>
       </div>
-      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${note.id}" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
-      <button class="delete-btn" onclick="removeNoteFromPinned(${note.id}, '${note.folderName}')">Delete</button>
-      <button class="pdf-btn" onclick="saveNoteAsPDF(${note.id})">Save as PDF</button>
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${
+        note.id
+      }" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${
+      note.pinned ? "Unpin" : "Pin"
+    }</button>
+      <button class="delete-btn" onclick="removeNoteFromPinned(${note.id}, '${
+      note.folderName
+    }')">Delete</button>
+      <button class="pdf-btn" onclick="saveNoteAsPDF(${
+        note.id
+      })">Save as PDF</button>
     `;
     notesContainer.appendChild(noteElement);
   });
@@ -444,7 +473,9 @@ function viewPinnedNotes() {
 
 // Remove note from pinned view (delete from folder)
 function removeNoteFromPinned(noteId, folderName) {
-  folders[folderName] = folders[folderName].filter((note) => note.id !== noteId);
+  folders[folderName] = folders[folderName].filter(
+    (note) => note.id !== noteId
+  );
   saveFolders();
   viewPinnedNotes();
 }
@@ -472,7 +503,6 @@ function togglePin(id) {
   }
 }
 
-
 // Save folders and deleted folders to localStorage (with styles)
 function saveFolders() {
   localStorage.setItem("folders", JSON.stringify(folders));
@@ -487,12 +517,12 @@ function addNote() {
     title: "",
     content: "",
     pinned: false,
-    fontColor: "#000000",  // Default color (black)
-    fontSize: "16px",      // Default font size
-    fontFamily: "Arial",   // Default font family
-    bold: false,           // Default bold
-    italic: false,         // Default italic
-    underline: false       // Default underline
+    fontColor: "#000000", // Default color (black)
+    fontSize: "16px", // Default font size
+    fontFamily: "Arial", // Default font family
+    bold: false, // Default bold
+    italic: false, // Default italic
+    underline: false, // Default underline
   };
   folders[currentFolder].push(newNote);
   saveFolders(); // Save data after adding note
@@ -504,7 +534,7 @@ function editNoteContent(id) {
   const note = folders[currentFolder].find((note) => note.id === id);
   if (note) {
     const noteElement = document.getElementById(`note-${id}`);
-    note.content = noteElement.innerHTML;  // Save the content
+    note.content = noteElement.innerHTML; // Save the content
 
     // Save the note's styles
     note.fontColor = noteElement.style.color || "#000000";
@@ -532,42 +562,111 @@ function displayNotes() {
 
     // Apply stored styles to the note
     noteElement.innerHTML = `
-      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${note.id}" style="color: ${note.fontColor}; font-size: ${note.fontSize}; font-family: ${note.fontFamily}; text-decoration: ${note.underline ? "underline" : "none"}; font-weight: ${note.bold ? "bold" : "normal"}; font-style: ${note.italic ? "italic" : "normal"}" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
-      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
-      <button class="style-btn" onclick="editNoteStyles(${note.id})">Edit Styles</button>
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${
+        note.id
+      }" style="color: ${note.fontColor}; font-size: ${
+      note.fontSize
+    }; font-family: ${note.fontFamily}; text-decoration: ${
+      note.underline ? "underline" : "none"
+    }; font-weight: ${note.bold ? "bold" : "normal"}; font-style: ${
+      note.italic ? "italic" : "normal"
+    }" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${
+      note.pinned ? "Unpin" : "Pin"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${
+        note.id
+      })">Delete</button>
+      <button class="style-btn" onclick="editNoteStyles(${
+        note.id
+      })">Edit Styles</button>
     `;
     notesContainer.appendChild(noteElement);
   });
 }
 
-// Edit note styles (color, size, font, etc.)
 function editNoteStyles(id) {
   const note = folders[currentFolder].find((note) => note.id === id);
   if (note) {
-    // Example: Open a simple prompt or a modal for style editing
-    const newColor = prompt("Enter Font Color (e.g. #ff0000 for red)", note.fontColor);
-    const newSize = prompt("Enter Font Size (e.g. 18px)", note.fontSize);
-    const newFont = prompt("Enter Font Family (e.g. Arial)", note.fontFamily);
+    Swal.fire({
+      title: "<strong>Edit Note Styles</strong>",
+      html: `
+        <div style="text-align: left; font-size: 14px;">
+          <label for="fontColor" style="display: block; margin-bottom: 5px;">Font Color:</label>
+          <input id="fontColor" type="color" value="${
+            note.fontColor || "#000000"
+          }" style="width: 100%;"><br><br>
+          
+          <label for="fontSize" style="display: block; margin-bottom: 5px;">Font Size:</label>
+          <input id="fontSize" type="number" value="${
+            parseInt(note.fontSize, 10) || 14
+          }" style="width: 60px;"> px<br><br>
+          
+          <label for="fontFamily" style="display: block; margin-bottom: 5px;">Font Family:</label>
+          <select id="fontFamily" style="width: 100%; padding: 5px;">
+            <option value="Arial" ${
+              note.fontFamily === "Arial" ? "selected" : ""
+            }>Arial</option>
+            <option value="Georgia" ${
+              note.fontFamily === "Georgia" ? "selected" : ""
+            }>Georgia</option>
+            <option value="Times New Roman" ${
+              note.fontFamily === "Times New Roman" ? "selected" : ""
+            }>Times New Roman</option>
+            <option value="Verdana" ${
+              note.fontFamily === "Verdana" ? "selected" : ""
+            }>Verdana</option>
+          </select><br><br>
+          
+          <label style="display: block; margin-bottom: 10px;">Text Style:</label>
+          <div style="display: flex; gap: 10px;">
+            <label><input id="bold" type="checkbox" ${
+              note.bold ? "checked" : ""
+            }> <strong>Bold</strong></label>
+            <label><input id="italic" type="checkbox" ${
+              note.italic ? "checked" : ""
+            }> <em>Italic</em></label>
+            <label><input id="underline" type="checkbox" ${
+              note.underline ? "checked" : ""
+            }> <u>Underline</u></label>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      focusConfirm: false,
+      preConfirm: () => {
+        return {
+          fontColor: document.getElementById("fontColor").value,
+          fontSize: `${document.getElementById("fontSize").value}px`,
+          fontFamily: document.getElementById("fontFamily").value,
+          bold: document.getElementById("bold").checked,
+          italic: document.getElementById("italic").checked,
+          underline: document.getElementById("underline").checked,
+        };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Update the note's styles with the new values
+        const styles = result.value;
+        note.fontColor = styles.fontColor;
+        note.fontSize = styles.fontSize;
+        note.fontFamily = styles.fontFamily;
+        note.bold = styles.bold;
+        note.italic = styles.italic;
+        note.underline = styles.underline;
 
-    // Update the note's styles
-    note.fontColor = newColor;
-    note.fontSize = newSize;
-    note.fontFamily = newFont;
-
-    // Optionally, handle bold, italic, underline toggles
-    note.bold = confirm("Bold?");
-    note.italic = confirm("Italic?");
-    note.underline = confirm("Underline?");
-
-    saveFolders(); // Save data after style change
-    displayNotes(); // Re-render notes with updated styles
+        saveFolders(); // Save data after style change
+        displayNotes(); // Re-render notes with updated styles
+      }
+    });
   } else {
     console.error("Note not found:", id);
   }
 }
-
 
 // Save note as a PDF
 function saveNoteAsPDF(id) {
@@ -578,7 +677,8 @@ function saveNoteAsPDF(id) {
 
     // Extract title and plain text content
     const title = note.title || "Untitled Note";
-    const content = note.content.replace(/<\/?[^>]+(>|$)/g, "") || "No content available."; // Strip HTML tags
+    const content =
+      note.content.replace(/<\/?[^>]+(>|$)/g, "") || "No content available."; // Strip HTML tags
 
     // Add title to PDF
     pdf.setFontSize(16);
@@ -609,16 +709,31 @@ function displayNotes() {
 
     // Apply stored styles to the note
     noteElement.innerHTML = `
-      <input type="text" class="note-title" value="${note.title}" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
-      <div class="note-content" contenteditable="true" id="note-${note.id}" style="color: ${note.fontColor}; font-size: ${note.fontSize}; font-family: ${note.fontFamily}; text-decoration: ${note.underline ? "underline" : "none"}; font-weight: ${note.bold ? "bold" : "normal"}; font-style: ${note.italic ? "italic" : "normal"}" oninput="editNoteContent(${note.id})">${note.content}</div>
-      <button class="pin-btn" onclick="togglePin(${note.id})">${note.pinned ? "Unpin" : "Pin"}</button>
-      <button class="delete-btn" onclick="removeNote(${note.id})">Delete</button>
-      <button class="style-btn" onclick="editNoteStyles(${note.id})">Edit Styles</button>
-      <button class="pdf-btn" onclick="saveNoteAsPDF(${note.id})">Save as PDF</button>
+      <input type="text" class="note-title" value="${
+        note.title
+      }" placeholder="Title" oninput="editNoteTitle(${note.id}, event)">
+      <div class="note-content" contenteditable="true" id="note-${
+        note.id
+      }" style="color: ${note.fontColor}; font-size: ${
+      note.fontSize
+    }; font-family: ${note.fontFamily}; text-decoration: ${
+      note.underline ? "underline" : "none"
+    }; font-weight: ${note.bold ? "bold" : "normal"}; font-style: ${
+      note.italic ? "italic" : "normal"
+    }" oninput="editNoteContent(${note.id})">${note.content}</div>
+      <button class="pin-btn" onclick="togglePin(${note.id})">${
+      note.pinned ? "Unpin" : "Pin"
+    }</button>
+      <button class="delete-btn" onclick="removeNote(${
+        note.id
+      })">Delete</button>
+      <button class="style-btn" onclick="editNoteStyles(${
+        note.id
+      })">Edit Styles</button>
+      <button class="pdf-btn" onclick="saveNoteAsPDF(${
+        note.id
+      })">Save as PDF</button>
     `;
     notesContainer.appendChild(noteElement);
   });
 }
-
-
-

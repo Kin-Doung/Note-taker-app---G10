@@ -20,12 +20,12 @@
     <!-- Include jsPDF library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+
     <!-- Link to external JavaScript file -->
     <script src="/js/main.js" defer></script>
   </head>
@@ -33,7 +33,7 @@
     <div class="container">
       <div class="sidebar">
         <div class="logo">
-          <img src="/images/noteLogo.jpg" alt="" id="logo"/>
+          <img src="/images/noteLogo.jpg" alt="" id="logo" />
           <div id="noteapp">
             <h3>Note Taker App</h3>
             <!-- <p>You can take notes</p> -->
@@ -44,7 +44,9 @@
             <i class="fa-solid fa-house"></i> Home
           </button>
         </div>
-        <button id="folder"><i class="fa-solid fa-folder"></i> All Folder</button>
+        <button id="folder">
+          <i class="fa-solid fa-folder"></i> All Folder
+        </button>
         <div
           id="folderListDropdown"
           class="folder-list-dropdown"
@@ -57,10 +59,12 @@
         </button>
         <div class="input-wrapper">
           <input type="text" id="newFolderName" placeholder="New Folder Name" />
-          <button onclick="addFolder()" id="create-folder">Create Folder</button>
+          <button onclick="addFolder()" id="create-folder">
+            Create Folder
+          </button>
         </div>
         <div id="trashContainer">
-          <button id="trash" onclick="viewTrash()"> 
+          <button id="trash" onclick="viewTrash()">
             <i class="fa-solid fa-trash"></i> Trash
           </button>
         </div>
@@ -70,8 +74,8 @@
         <div class="toolbar">
           <button id="createNoteBtn" onclick="addNote()">Create Note</button>
           <div class="search-container">
-            <img id="profile" src="/images/profile.png" alt="">
-            <img id="ring" src="/images/ring.png" alt="">
+            <img id="profile" src="/images/profile.png" alt="" />
+            <img id="ring" src="/images/ring.png" alt="" />
             <div class="search-input-wrapper">
               <i class="fa-solid fa-magnifying-glass" id="search"></i>
               <input
@@ -106,7 +110,7 @@
         <div id="notesContainer" class="notes-container"></div>
       </div>
     </div>
-    
+
     <!-- Trash View -->
     <div id="trashView" class="trash-view" style="display: none">
       <h3>Deleted Folders</h3>

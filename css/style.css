@@ -244,7 +244,6 @@ li {
   margin-bottom: 5px;
 }
 
-
 /* Pin & Delete Buttons */
 .pin-btn,
 .delete-btn {
@@ -387,7 +386,7 @@ li {
   top: 2px;
   color: gray;
 }
-select{
+select {
   color: #ffffff;
 }
 
@@ -401,7 +400,7 @@ select{
   border-radius: 5px;
   z-index: 1;
 }
-.style-btn{
+.style-btn {
   margin-left: 0;
 }
 
@@ -436,6 +435,9 @@ select{
 
 .pdf-btn:hover {
   background-color: #45a049;
+}
+#fontFamily {
+  color: #000;
 }
 
 /* For Tablets (768px and up) */
@@ -591,7 +593,7 @@ select{
     position: absolute;
     left: 100px;
   }
-  #search{
+  #search {
     top: 13px;
     margin-left: 120px;
     font-size: 12px;
@@ -602,7 +604,6 @@ select{
     height: 18px;
     font-size: 10px;
     left: -20px;
-
   }
   #profile {
     position: absolute;
@@ -629,7 +630,7 @@ select{
     left: -75px;
     width: 100px;
   }
-  #logo{
+  #logo {
     width: 50px;
   }
   /* Adjust buttons for mobile */
@@ -651,10 +652,25 @@ select{
     padding: 5px 8px;
     font-size: 12px;
   }
+  .swal2-confirm {
+    font-size: 10px;
+    padding-right: 30px;
+  }
+  .swal2-cancel {
+    font-size: 10px;
+    padding-right: 40px;
+  }
+  .swal2-popup {
+    width: 90%;
+    height: 50vh;
+  }
+  .swal2-title {
+    font-size: 20px;
+  }
 }
 
 /* Extra Small Devices (e.g., small phones) */
-@media (max-width: 480px) {
+@media (width: 480px) {
   /* Notes Section */
   .notes-section {
     padding: 10px;

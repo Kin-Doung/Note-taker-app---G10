@@ -1,56 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Registration and Login</title>
-    <link rel="stylesheet" href="/cssform/style.css">
+    <link rel="stylesheet" href="/cssform/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="/css/form.css">
+    <link rel="stylesheet" href="/css/form.css" />
     <script src="js/form.js" defer></script>
-</head>
-<body>
-
+  </head>
+  <body>
     <header class="header">
-        <div class="logo">
-            <img src="/images/noteLogo.jpg" alt="Website Logo"​​​ class="note-logo">
-            <h3>Note Taker</h3>
-        </div>
-        <div class="open-buttons-container">
-            <button class="open-modal" onclick="openModal('registerModal')">Sign Up</button>
-            <button class="open-modal" onclick="openModal('loginModal')">Sign in</button>
-        </div>
+      <div class="logo">
+        <img
+          src="/images/noteLogo.jpg"
+          alt="Website Logo"
+          
+          class="note-logo"
+        />
+        <h3>Note Taker</h3>
+      </div>
+      <div class="open-buttons-container">
+        <button class="open-modal" onclick="openModal('registerModal')">
+          Sign Up
+        </button>
+        <button class="open-modal" onclick="openModal('loginModal')">
+          Sign in
+        </button>
+      </div>
     </header>
 
     <div class="main-container">
-        <img src="images/notebook.jpg" alt="Hero Image" class="note-image">
+      <img src="images/notebook.jpg" alt="Hero Image" class="note-image" />
     </div>
 
     <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <h2>Register</h2>
-            <div class="fir-last">
-                <input id="register-firstname" type="text" placeholder="First Name">
-                <input id="register-lastname" type="text" placeholder="Last Name">
-            </div>
-            <input id="register-email" type="email" placeholder="Email">
-            <input id="register-password" type="password" placeholder="Password">
-            <div class="reg-can">
-                <button class="reg-btn" onclick="registerUser()">Register</button>
-                <button class="reg-btn" onclick="closeModal('registerModal')">Cancel</button>
-            </div>
+      <div class="modal-content">
+        <h2>Register</h2>
+        <div class="fir-last">
+          <input id="register-firstname" type="text" placeholder="First Name" />
+          <input id="register-lastname" type="text" placeholder="Last Name" />
         </div>
+        <input id="register-email" type="email" placeholder="Email" />
+        <input id="register-password" type="password" placeholder="Password" />
+        <div class="reg-can">
+          <button class="reg-btn" onclick="registerUser()">Register</button>
+          <button class="reg-btn" onclick="closeModal('registerModal')">
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
     <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <h2>Login</h2>
-            <input id="login-email" type="email" placeholder="Email">
-            <input id="login-password" type="password" placeholder="Password">
-            <div class="reg-can">
-                <button class = "reg-btn" onclick="loginUser()">Login</button>
-                <button class = "reg-btn" onclick="closeModal('loginModal')">Cancel</button>
-            </div>
+      <div class="modal-content">
+        <h2>Login</h2>
+        <input id="login-email" type="email" placeholder="Email" />
+        <input id="login-password" type="password" placeholder="Password" />
+        <div class="reg-can">
+          <button class="reg-btn" onclick="loginUser()">Login</button>
+          <button class="reg-btn" onclick="closeModal('loginModal')">
+            Cancel
+          </button>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

@@ -151,7 +151,6 @@ h3 {
   .main-container {
     width: 70%;
     margin-left: 80px;
-
   }
 
   .logo {
@@ -168,24 +167,24 @@ h3 {
 }
 
 @media (max-width: 1024px) and (min-width: 768px) {
-    .header {
-        padding: 20px;
-        width: auto;
-    }
-    .logo {
-        left: 0;
-    }
-    .open-buttons-container {
-        padding-right: 150px;
-    }
-    .main-container {
-        right: 40px;
-        top: 50px;
-    }
-    .note-image {
-        width: 740px;
-        height: 40vh;
-    }
+  .header {
+    padding: 20px;
+    width: auto;
+  }
+  .logo {
+    left: 0;
+  }
+  .open-buttons-container {
+    padding-right: 150px;
+  }
+  .main-container {
+    right: 40px;
+    top: 50px;
+  }
+  .note-image {
+    width: 740px;
+    height: 40vh;
+  }
 }
 
 @media (max-width: 768px) {
@@ -208,7 +207,7 @@ h3 {
   }
 
   .open-modal {
-    top: -32px;   
+    top: -32px;
     margin-left: -10px;
   }
 
