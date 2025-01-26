@@ -5,9 +5,9 @@
 }
 .header {
   display: flex;
-  background-color: #141516;
+  background-color: #357abd;
   padding: 10px;
-  align-items: center;
+  align-items: center; 
   justify-content: space-evenly;
 }
 .logo {
@@ -26,6 +26,13 @@
 .logo,
 h3 {
   color: white;
+}
+#note_taker{
+  text-align: center;
+  background: #394453;
+  width: 120px;
+  padding: 10px;
+  border-radius: 30px;
 }
 .open-buttons-container {
   display: flex;
@@ -215,7 +222,13 @@ h3 {
     flex-direction: column;
     width: 100%;
     height: auto;
-    margin-left: -5px;
+    margin-left: -3px; 
+
+  }
+
+  #note_taker{
+    width: 80px;
+  
   }
   .note-image {
     width: 90%;
